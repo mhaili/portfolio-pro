@@ -7,374 +7,405 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ZELLIGE_PATH = "M24,0 L48,24 L24,48 L0,24 Z M24,8 L40,24 L24,40 L8,24 Z";
-const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-const FIRST = ["M", "A", "J", "D", "A"];
-const LAST = [
-  { char: "M", color: "#C9AA7C" },
-  { char: "H", color: "#C9AA7C" },
-  { char: "A", color: "#F5F0E8" },
-  { char: "I", color: "#F5F0E8" },
-  { char: "L", color: "#F5F0E8" },
-  { char: "I", color: "#F5F0E8" },
+const FACTS = [
+  "3 000 km · Marrakech → Bordeaux",
+  "6 ans à composer du code",
+  "2 cultures · 1 trajectoire",
+  "CDI · Septembre 2026",
 ];
 
-const FACTS = ["3 000 km · Marrakech → Bordeaux", "6 ans à composer du code", "2 cultures · 1 trajectoire", "CDI · Septembre 2026"];
+const LS = 260;
+
+const QUESTION = "Qui serai-je dans cinq ans ?";
+const SUBTITLE  = "Développeuse Full Stack, créatrice et éternelle apprenante.\nChaque projet est une étape vers cette réponse.";
+
+const NAV_LINKS = [
+  { href: "#hero",      label: "ACCUEIL"  },
+  { href: "#formation", label: "PARCOURS" },
+  { href: "#projets",   label: "PROJETS"  },
+  { href: "#contact",   label: "CONTACT"  },
+];
+
 
 export default function Hero() {
-  const sectionRef    = useRef<HTMLElement>(null);
-  const scrollWrapRef = useRef<HTMLDivElement>(null);
-  const tiltRef       = useRef<HTMLDivElement>(null);
-  const firstRefs     = useRef<(HTMLSpanElement | null)[]>([]);
-  const lastRefs      = useRef<(HTMLSpanElement | null)[]>([]);
-  const lineRef       = useRef<HTMLDivElement>(null);
-  const subRef        = useRef<HTMLDivElement>(null);
-  const patternRef    = useRef<SVGSVGElement>(null);
-  const portraitRef   = useRef<HTMLDivElement>(null);
-  const glowRef       = useRef<HTMLDivElement>(null);
-  const [factIdx, setFactIdx] = useState(0);
+  const sectionRef   = useRef<HTMLElement>(null);
+  const wrapRef      = useRef<HTMLDivElement>(null);
+  const photoRef     = useRef<HTMLDivElement>(null);
+  const lensRef      = useRef<HTMLDivElement>(null);
+  const lensInnerRef = useRef<HTMLDivElement>(null);
+  const lensRingRef  = useRef<SVGSVGElement>(null);
+  const reticleRef   = useRef<HTMLDivElement>(null);
+  const infoRef = useRef<HTMLDivElement>(null);
+
+  const [factIdx,     setFactIdx]     = useState(0);
   const [factVisible, setFactVisible] = useState(true);
+  const [qText,       setQText]       = useState("");
+  const [sText,       setSText]       = useState("");
+  const [cursorOnQ,   setCursorOnQ]   = useState(true);
+  const [showCursor,  setShowCursor]  = useState(false);
 
-  // Scramble entrance: letters fly in from Y offset AND scramble their char simultaneously
-  useEffect(() => {
-    const firstLetters = firstRefs.current.filter(Boolean) as HTMLSpanElement[];
-    const lastLetters  = lastRefs.current.filter(Boolean)  as HTMLSpanElement[];
-    const allLetters   = [...firstLetters, ...lastLetters];
-    const allTargets   = [...FIRST, ...LAST.map(l => l.char)];
-
-    // Hide all initially
-    allLetters.forEach(el => {
-      el.style.opacity = "0";
-      el.style.transform = "translateY(-80px) rotate(-4deg)";
-      el.style.transition = "none";
-    });
-
-    const STEPS = 9;
-    const STEP_MS = 36;
-
-    allLetters.forEach((ref, idx) => {
-      const target = allTargets[idx];
-      const enterDelay = 180 + idx * 75; // staggered
-
-      setTimeout(() => {
-        // Animate in with CSS transition
-        ref.style.transition = `transform 0.8s cubic-bezier(0.16,1,0.3,1), opacity 0.5s ease`;
-        ref.style.opacity = "1";
-        ref.style.transform = "translateY(0px) rotate(0deg)";
-
-        // Scramble text content while it's entering
-        let step = 0;
-        const iv = setInterval(() => {
-          if (step < STEPS) {
-            ref.textContent = SCRAMBLE_CHARS[(step * 7 + idx * 3 + 11) % 26];
-            step++;
-          } else {
-            ref.textContent = target;
-            clearInterval(iv);
-          }
-        }, STEP_MS);
-      }, enterDelay);
-    });
-  }, []);
-
-  // GSAP: portrait entrance + other elements + scroll
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.set([lineRef.current, subRef.current], { opacity: 0 });
-      gsap.set(lineRef.current, { scaleX: 0, transformOrigin: "left center" });
-      gsap.set(portraitRef.current, { opacity: 0, x: 50, scale: 0.95 });
-      gsap.set(glowRef.current, { opacity: 0, scale: 0.8 });
-
-      const tl = gsap.timeline({ delay: 0.6 });
-      tl
-        .to(glowRef.current, { opacity: 1, scale: 1, duration: 1.8, ease: "power2.out" }, 0)
-        .to(portraitRef.current, { opacity: 1, x: 0, scale: 1, duration: 1.4, ease: "power3.out" }, 0.1)
-        .to(lineRef.current, { scaleX: 1, opacity: 1, duration: 1, ease: "power2.inOut" }, 0.9)
-        .to(subRef.current, { opacity: 1, duration: 0.8, ease: "power2.out" }, 1.1);
-
-      // Scroll: block lifts and fades
-      gsap.to(scrollWrapRef.current, {
-        y: -40, opacity: 0.08, ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current, start: "top top", end: "80% top", scrub: 1,
-        },
-      });
-      // Portrait rises faster on scroll (parallax depth)
-      gsap.to(portraitRef.current, {
-        y: -70, ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current, start: "top top", end: "bottom top", scrub: 1.4,
-        },
-      });
-      gsap.to(subRef.current, {
-        y: -50, opacity: 0, ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current, start: "15% top", end: "70% top", scrub: 1,
-        },
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  // Rotating facts ticker with fade transition
   useEffect(() => {
     const iv = setInterval(() => {
       setFactVisible(false);
       setTimeout(() => {
         setFactIdx(i => (i + 1) % FACTS.length);
         setFactVisible(true);
-      }, 350);
-    }, 2800);
+      }, 280);
+    }, 3400);
     return () => clearInterval(iv);
   }, []);
 
-  // Mouse: 3D tilt on name + independent portrait parallax + glow follow
+  // Typewriter effect
+  useEffect(() => {
+    let cancelled = false;
+    const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
+
+    const run = async () => {
+      await wait(1050);
+      if (cancelled) return;
+      setShowCursor(true);
+
+      for (let i = 0; i <= QUESTION.length; i++) {
+        if (cancelled) return;
+        setQText(QUESTION.slice(0, i));
+        await wait(i === 0 ? 0 : 58);
+      }
+
+      await wait(380);
+      if (cancelled) return;
+      setCursorOnQ(false);
+
+      for (let i = 0; i <= SUBTITLE.length; i++) {
+        if (cancelled) return;
+        setSText(SUBTITLE.slice(0, i));
+        await wait(i === 0 ? 0 : 28);
+      }
+
+      await wait(1400);
+      if (!cancelled) setShowCursor(false);
+    };
+
+    run();
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.set(photoRef.current, { scale: 1.07, opacity: 0, filter: "blur(18px)" });
+      gsap.set(infoRef.current,  { opacity: 0 });
+
+      gsap.timeline({ delay: 0.35 })
+        .to(photoRef.current, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 2.2, ease: "power2.out" }, 0)
+        .to(infoRef.current,  { opacity: 1, duration: 0.9 }, 1.6);
+
+      gsap.to(wrapRef.current, {
+        y: -55, opacity: 0, ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "10% top", end: "70% top", scrub: 1,
+        },
+      });
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
   useEffect(() => {
     const section = sectionRef.current;
-    const tilt    = tiltRef.current;
-    if (!section || !tilt) return;
+    if (!section) return;
 
-    let tRX = 0, tRY = 0, cRX = 0, cRY = 0;
-    let tPX = 0, tPY = 0, cPX = 0, cPY = 0;
-    let rafId: number;
+    let tX = window.innerWidth  / 2;
+    let tY = window.innerHeight / 2;
+    let cX = tX, cY = tY;
+    let tA = 0, cA = 0;
+    let raf: number;
+    const half = LS / 2;
 
     const onMove = (e: MouseEvent) => {
-      const r  = section.getBoundingClientRect();
-      const mx = (e.clientX - r.left) / r.width  - 0.5;
-      const my = (e.clientY - r.top)  / r.height - 0.5;
-      tRY = mx * 10; tRX = -my * 5;
-      tPX = mx * 36; tPY = my * 22;
-      if (patternRef.current) patternRef.current.style.transform = `translate(${mx * 14}px, ${my * 14}px)`;
-      if (glowRef.current)    glowRef.current.style.transform    = `translate(${mx * 22}px, ${my * 28}px)`;
+      const r = section.getBoundingClientRect();
+      tX = e.clientX - r.left;
+      tY = e.clientY - r.top;
+      tA = 1;
     };
-    const onLeave = () => { tRX = 0; tRY = 0; tPX = 0; tPY = 0; };
+    const onLeave = () => { tA = 0; };
 
     const tick = () => {
-      cRX += (tRX - cRX) * 0.06; cRY += (tRY - cRY) * 0.06;
-      cPX += (tPX - cPX) * 0.09; cPY += (tPY - cPY) * 0.09;
-      tilt.style.transform = `perspective(1400px) rotateX(${cRX}deg) rotateY(${cRY}deg)`;
-      if (portraitRef.current)
-        portraitRef.current.style.transform = `translate(${cPX}px,${cPY}px)`;
-      rafId = requestAnimationFrame(tick);
-    };
+      cX += (tX - cX) * 0.09;
+      cY += (tY - cY) * 0.09;
+      cA += (tA - cA) * 0.065;
+      const alpha = Math.max(0, Math.min(1, cA));
+      const lx = cX - half, ly = cY - half;
 
-    rafId = requestAnimationFrame(tick);
-    section.addEventListener("mousemove", onMove, { passive: true });
+      if (lensRef.current) {
+        lensRef.current.style.left    = `${lx}px`;
+        lensRef.current.style.top     = `${ly}px`;
+        lensRef.current.style.opacity = String(alpha);
+      }
+      if (lensInnerRef.current) {
+        lensInnerRef.current.style.left = `${-lx}px`;
+        lensInnerRef.current.style.top  = `${-ly}px`;
+      }
+      if (lensRingRef.current) {
+        lensRingRef.current.style.left    = `${lx - 12}px`;
+        lensRingRef.current.style.top     = `${ly - 12}px`;
+        lensRingRef.current.style.opacity = String(alpha * 0.75);
+      }
+      if (reticleRef.current) {
+        reticleRef.current.style.left    = `${cX}px`;
+        reticleRef.current.style.top     = `${cY}px`;
+        reticleRef.current.style.opacity = String(alpha * 0.8);
+      }
+
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    section.addEventListener("mousemove",  onMove,  { passive: true });
     section.addEventListener("mouseleave", onLeave);
-    return () => { cancelAnimationFrame(rafId); section.removeEventListener("mousemove", onMove); section.removeEventListener("mouseleave", onLeave); };
+    return () => {
+      cancelAnimationFrame(raf);
+      section.removeEventListener("mousemove",  onMove);
+      section.removeEventListener("mouseleave", onLeave);
+    };
   }, []);
+
+  const R = LS / 2 + 12;
+  const hexPoints = Array.from({ length: 6 }, (_, i) => {
+    const a = (Math.PI / 3) * i - Math.PI / 6;
+    return [R + Math.cos(a) * R, R + Math.sin(a) * R];
+  });
+  const hexStr   = hexPoints.map(([x, y]) => `${x},${y}`).join(" ");
+  const hexSmall = hexPoints.map(([x, y]) => {
+    const cx = R, cy = R, f = 0.88;
+    return `${cx + (x - cx) * f},${cy + (y - cy) * f}`;
+  }).join(" ");
 
   return (
     <section
       ref={sectionRef}
-      style={{
-        minHeight: "100vh",
-        background: "#1C1917",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        padding: "0 7vw",
-        position: "relative",
-        overflow: "hidden",
-      }}
+      style={{ height: "100vh", background: "#1A0E04", position: "relative", overflow: "hidden" }}
     >
-      {/* Zellige bg — subtle on dark */}
-      <svg ref={patternRef} aria-hidden style={{
-        position: "absolute", inset: "-12%", width: "124%", height: "124%",
-        opacity: 0.03, transition: "transform 0.7s cubic-bezier(0.16,1,0.3,1)", pointerEvents: "none",
-      }}>
-        <defs>
-          <pattern id="z2" x="0" y="0" width="48" height="48" patternUnits="userSpaceOnUse">
-            <path d={ZELLIGE_PATH} stroke="#C9AA7C" strokeWidth="0.7" fill="none" />
-            <circle cx="24" cy="24" r="2.2" fill="#B5673C" opacity="0.6" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#z2)" />
-      </svg>
-
-      {/* Terracotta atmospheric glow behind portrait */}
-      <div ref={glowRef} aria-hidden style={{
-        position: "absolute",
-        right: "4vw", top: "8%",
-        width: "clamp(220px, 30vw, 440px)",
-        height: "clamp(290px, 40vw, 580px)",
-        background: "radial-gradient(ellipse at 45% 35%, rgba(181,103,60,0.22) 0%, rgba(181,103,60,0.08) 45%, transparent 72%)",
-        pointerEvents: "none",
-        transition: "transform 0.5s cubic-bezier(0.16,1,0.3,1)",
-        filter: "blur(2px)",
-      }} />
-
-      {/* Gold accent arc — decorative */}
-      <svg aria-hidden style={{
-        position: "absolute", left: "-2vw", top: "20%",
-        width: "clamp(80px, 10vw, 140px)", height: "clamp(200px, 28vw, 400px)",
-        opacity: 0.12, pointerEvents: "none",
-      }}>
-        <path
-          d="M100,10 Q10,50 10,100 Q10,150 100,190"
-          stroke="#C9AA7C" strokeWidth="1" fill="none"
-        />
-      </svg>
-
-      {/* Left accent bar */}
-      <div aria-hidden style={{
-        position: "absolute", left: 0, top: "25%", width: "2px", height: "35%",
-        background: "linear-gradient(to bottom, transparent, #B5673C 40%, #B5673C 60%, transparent)",
-        opacity: 0.7,
-      }} />
-
-      {/* Side label */}
-      <div aria-hidden style={{
-        position: "absolute", left: "2.5vw", top: "50%",
-        transform: "translateY(-50%) rotate(-90deg)",
-        fontFamily: "var(--font-space-grotesk)", fontSize: "8px", letterSpacing: "0.32em",
-        color: "#F5F0E8", opacity: 0.18, whiteSpace: "nowrap", userSelect: "none",
-      }}>
-        PORTFOLIO · 2026
-      </div>
-
-      {/* Top-right section label */}
-      <div aria-hidden style={{
-        position: "absolute", top: "6vh", right: "7vw",
-        fontFamily: "var(--font-space-grotesk)", fontSize: "8px", letterSpacing: "0.28em",
-        color: "#C9AA7C", opacity: 0.55,
-      }}>
-        01 / IDENTITÉ
-      </div>
-
-      {/* ── Main composition ── */}
-      <div ref={scrollWrapRef}>
-        <div ref={tiltRef} style={{ position: "relative", willChange: "transform" }}>
-
-          {/* MAJDA — z:1, behind portrait */}
-          <div style={{
-            display: "flex", lineHeight: 0.86, marginBottom: "-0.04em",
-            position: "relative", zIndex: 1,
-          }}>
-            {FIRST.map((letter, i) => (
-              <span key={i} ref={(el) => { firstRefs.current[i] = el; }}
-                style={{
-                  fontFamily: "var(--font-cormorant)", fontStyle: "italic", fontWeight: 300,
-                  fontSize: "clamp(68px, 14.5vw, 210px)", color: "#F5F0E8",
-                  letterSpacing: "-0.035em", display: "inline-block", willChange: "transform",
-                  opacity: 0,
-                }}
-              >{letter}</span>
-            ))}
-          </div>
-
-          {/* Portrait — z:2, sandwichée, glows on dark bg */}
-          <div ref={portraitRef} className="hero-portrait" style={{
-            position: "absolute",
-            right: "2%", top: "-20%",
-            width: "clamp(160px, 24vw, 340px)",
-            height: "clamp(215px, 32vw, 454px)",
-            zIndex: 2,
-            pointerEvents: "none",
-            willChange: "transform",
-          }}>
-            <Image
-              src="/photo-portrait-removebg.png"
-              alt="Majda Mhaili"
-              fill priority
-              sizes="(max-width: 640px) 0px, (max-width: 1200px) 24vw, 340px"
-              style={{ objectFit: "contain", objectPosition: "top center" }}
-            />
-            {/* Ground fade */}
-            <div style={{
-              position: "absolute", bottom: "-1%", left: "10%", right: "10%", height: "40px",
-              background: "radial-gradient(ellipse, rgba(28,25,23,0.5) 0%, transparent 70%)",
-              filter: "blur(12px)",
-            }} />
-          </div>
-
-          {/* MHAILI — z:3, devant la photo, MH en or */}
-          <div style={{
-            display: "flex", lineHeight: 0.86, paddingLeft: "2.5vw",
-            position: "relative", zIndex: 3,
-          }}>
-            {LAST.map((item, i) => (
-              <span key={i} ref={(el) => { lastRefs.current[i] = el; }}
-                style={{
-                  fontFamily: "var(--font-cormorant)", fontStyle: "italic", fontWeight: 300,
-                  fontSize: "clamp(68px, 14.5vw, 210px)", color: item.color,
-                  letterSpacing: "-0.035em", display: "inline-block", willChange: "transform",
-                  opacity: 0,
-                }}
-              >{item.char}</span>
-            ))}
-          </div>
-        </div>
-
-        {/* Rotating fact */}
-        <div style={{
-          display: "flex", alignItems: "center", gap: "14px",
-          marginTop: "3vh", marginBottom: "2.5vh",
-          opacity: factVisible ? 1 : 0,
-          transition: "opacity 0.35s ease",
-        }}>
-          <div style={{ width: "24px", height: "1px", background: "#B5673C", flexShrink: 0 }} />
-          <span style={{
-            fontFamily: "var(--font-space-grotesk)", fontSize: "9px", letterSpacing: "0.22em",
-            color: "#B5673C", opacity: 0.75, whiteSpace: "nowrap",
-          }}>
-            {FACTS[factIdx]}
-          </span>
-        </div>
-
-        {/* Gold line */}
-        <div ref={lineRef} style={{
-          height: "1px",
-          background: "linear-gradient(90deg, #C9AA7C 0%, rgba(201,170,124,0.15) 100%)",
-          marginBottom: "3.5vh", width: "100%",
-        }} />
-
-        {/* Subtitle */}
-        <div ref={subRef} style={{
-          display: "flex", justifyContent: "space-between", alignItems: "flex-end",
-          flexWrap: "wrap", gap: "12px", opacity: 0,
-        }}>
-          <div>
-            <p style={{
-              fontFamily: "var(--font-dm-sans)", fontSize: "clamp(9px,1vw,11px)",
-              letterSpacing: "0.28em", color: "#F5F0E8", opacity: 0.4, marginBottom: "8px",
-            }}>DÉVELOPPEUSE FULL STACK</p>
-            <p style={{
-              fontFamily: "var(--font-cormorant)", fontStyle: "italic",
-              fontSize: "clamp(18px, 2.4vw, 32px)", color: "#F5F0E8", letterSpacing: "-0.01em",
-              opacity: 0.92,
-            }}>Je ne code pas. Je compose.</p>
-          </div>
-          <div style={{ textAlign: "right" }}>
-            <p style={{
-              fontFamily: "var(--font-space-grotesk)", fontSize: "9px",
-              letterSpacing: "0.22em", color: "#B5673C", opacity: 0.85, marginBottom: "5px",
-            }}>BORDEAUX · FRANCE</p>
-            <p style={{
-              fontFamily: "var(--font-space-grotesk)", fontSize: "9px",
-              letterSpacing: "0.22em", color: "#F5F0E8", opacity: 0.25,
-            }}>CDI · SEPT 2026</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Scroll indicator */}
-      <div style={{
-        position: "absolute", bottom: "5vh", right: "7vw",
-        display: "flex", alignItems: "center", gap: "14px", opacity: 0.3,
-      }}>
-        <div style={{ width: "40px", height: "1px", background: "#F5F0E8" }} />
+      {/* ── NAVIGATION intégrée ── */}
+      <nav
+        style={{
+          position: "absolute", top: 0, left: 0, right: 0,
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+          padding: "3.2vh 6vw",
+          zIndex: 20,
+          background: "linear-gradient(to bottom, rgba(10,6,2,0.72) 0%, transparent 100%)",
+          pointerEvents: "none",
+        }}
+      >
         <span style={{
-          fontFamily: "var(--font-dm-sans)", fontSize: "9px",
-          letterSpacing: "0.22em", color: "#F5F0E8",
-        }}>SCROLL</span>
+          fontFamily: "var(--font-cormorant)", fontStyle: "italic",
+          fontSize: "20px", color: "#F5F0E8", fontWeight: 400,
+          letterSpacing: "-0.01em",
+        }}>
+          Majda Mhaili
+        </span>
+        <div style={{ display: "flex", gap: "8px", pointerEvents: "auto" }}>
+          {NAV_LINKS.map(({ href, label }) => (
+            <a
+              key={href}
+              href={href}
+              style={{
+                fontFamily: "var(--font-space-grotesk)",
+                fontSize: "9px", letterSpacing: "0.14em",
+                color: "#F5F0E8", textDecoration: "none",
+                padding: "7px 16px",
+                border: "1px solid rgba(245,240,232,0.15)",
+                borderRadius: "100px",
+                background: "rgba(10,6,2,0.28)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+                opacity: 0.7,
+                transition: "opacity 0.25s, border-color 0.25s, background 0.25s",
+                display: "inline-block",
+              }}
+              onMouseEnter={e => {
+                const el = e.currentTarget as HTMLAnchorElement;
+                el.style.opacity = "1";
+                el.style.borderColor = "rgba(201,170,124,0.5)";
+                el.style.background  = "rgba(201,170,124,0.1)";
+              }}
+              onMouseLeave={e => {
+                const el = e.currentTarget as HTMLAnchorElement;
+                el.style.opacity = "0.7";
+                el.style.borderColor = "rgba(245,240,232,0.15)";
+                el.style.background  = "rgba(10,6,2,0.28)";
+              }}
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+      </nav>
+
+      {/* ── CONTENU PRINCIPAL (scroll-fadeable) ── */}
+      <div ref={wrapRef} style={{ position: "absolute", inset: 0, zIndex: 3 }}>
+
+        {/* SCÈNE 1 — portrait plein cadre */}
+        <div ref={photoRef} style={{ position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none" }}>
+          <Image src="/scene1.png" alt="Majda Mhaili" fill priority sizes="100vw"
+            style={{ objectFit: "cover", objectPosition: "center top" }} />
+          <div style={{
+            position: "absolute", inset: 0,
+            background: "radial-gradient(ellipse 78% 78% at 50% 48%, transparent 38%, rgba(10,6,2,0.46) 100%)",
+            pointerEvents: "none",
+          }} />
+          <div style={{
+            position: "absolute", bottom: 0, left: 0, right: 0, height: "58%",
+            background: "linear-gradient(to top, rgba(10,6,2,0.90) 0%, rgba(10,6,2,0.50) 28%, transparent 100%)",
+            pointerEvents: "none",
+          }} />
+        </div>
+
+        {/* LOUPE HEXAGONALE */}
+        <div
+          ref={lensRef}
+          style={{
+            position: "absolute",
+            width: `${LS}px`, height: `${LS}px`,
+            clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
+            overflow: "hidden", zIndex: 4, opacity: 0, pointerEvents: "none",
+          }}
+        >
+          <div ref={lensInnerRef} style={{ position: "absolute", width: "100vw", height: "100vh" }}>
+            <Image src="/scene2.png" alt="" fill sizes="100vw"
+              style={{ objectFit: "cover", objectPosition: "center top" }} />
+          </div>
+        </div>
+
+        {/* ANNEAU SVG */}
+        <svg ref={lensRingRef} width={R * 2} height={R * 2}
+          style={{ position: "absolute", zIndex: 5, opacity: 0, pointerEvents: "none" }}>
+          <polygon points={hexStr}   fill="none" stroke="rgba(201,170,124,0.65)" strokeWidth="1" />
+          <polygon points={hexSmall} fill="none" stroke="rgba(201,170,124,0.18)" strokeWidth="0.5" />
+          {hexPoints.map(([x, y], i) => (
+            <rect key={i} x={x - 3} y={y - 3} width={6} height={6} fill="rgba(181,103,60,0.8)" />
+          ))}
+        </svg>
+
+        {/* RÉTICULE */}
+        <div ref={reticleRef} style={{
+          position: "absolute", transform: "translate(-50%, -50%)",
+          pointerEvents: "none", zIndex: 6, opacity: 0,
+        }}>
+          <svg width="26" height="26">
+            <line x1="13" y1="0"  x2="13" y2="7"  stroke="rgba(201,170,124,0.9)" strokeWidth="0.8" />
+            <line x1="13" y1="19" x2="13" y2="26" stroke="rgba(201,170,124,0.9)" strokeWidth="0.8" />
+            <line x1="0"  y1="13" x2="7"  y2="13" stroke="rgba(201,170,124,0.9)" strokeWidth="0.8" />
+            <line x1="19" y1="13" x2="26" y2="13" stroke="rgba(201,170,124,0.9)" strokeWidth="0.8" />
+            <circle cx="13" cy="13" r="1.8" fill="rgba(201,170,124,1)" />
+          </svg>
+        </div>
+
+        {/* ── TOUT AU CENTRE ── */}
+        <div style={{
+          position: "absolute", left: "50%", top: "50%",
+          transform: "translate(-50%, -52%)",
+          zIndex: 6, pointerEvents: "none",
+          display: "flex", flexDirection: "column",
+          alignItems: "center", textAlign: "center",
+        }}>
+          {/* Question — Cormorant Display italic */}
+          <h1 style={{
+            fontFamily: "var(--font-cormorant)", fontStyle: "italic", fontWeight: 300,
+            fontSize: "clamp(40px, 6.8vw, 108px)", lineHeight: 1.02,
+            letterSpacing: "-0.025em",
+            color: "#F5F0E8",
+            textShadow: "0 2px 60px rgba(181,103,60,0.22), 0 0 2px rgba(245,240,232,0.08)",
+            margin: 0,
+            minHeight: "1.02em",
+          }}>
+            {qText}
+            {cursorOnQ && showCursor && (
+              <span style={{
+                display: "inline-block", width: "3px",
+                height: "0.78em", background: "#B5673C",
+                marginLeft: "4px", verticalAlign: "middle",
+                animation: "blink 1.05s step-end infinite",
+                borderRadius: "1px",
+              }} />
+            )}
+          </h1>
+
+          {/* Sous-titre — DM Sans */}
+          <p style={{
+            fontFamily: "var(--font-dm-sans)", fontWeight: 300,
+            fontSize: "clamp(15px, 1.55vw, 21px)", lineHeight: 1.7,
+            color: "#E2C9B0", opacity: 0.95,
+            margin: "3vh 0 0",
+            maxWidth: "46ch",
+            letterSpacing: "0.015em",
+            minHeight: "3.4em",
+          }}>
+            {sText.split("\n").map((line, i, arr) => (
+              <span key={i}>
+                {line}
+                {i < arr.length - 1 && <br />}
+              </span>
+            ))}
+            {!cursorOnQ && showCursor && (
+              <span style={{
+                display: "inline-block", width: "2px",
+                height: "0.85em", background: "#B5673C",
+                marginLeft: "3px", verticalAlign: "middle",
+                animation: "blink 1.05s step-end infinite",
+                borderRadius: "1px",
+              }} />
+            )}
+          </p>
+        </div>
+
+      </div>
+
+      {/* ── BARRE BAS 3 colonnes ── */}
+      <div ref={infoRef} style={{
+        position: "absolute", bottom: 0, left: 0, right: 0,
+        padding: "1.8vh 7vw 3vh",
+        borderTop: "1px solid rgba(245,240,232,0.07)",
+        display: "grid", gridTemplateColumns: "1fr auto 1fr",
+        alignItems: "center", gap: "16px", zIndex: 10,
+        background: "linear-gradient(to top, rgba(10,6,2,0.93) 0%, transparent 100%)",
+      }}>
+        <span style={{ fontFamily: "var(--font-space-grotesk)", fontSize: "8px", letterSpacing: "0.3em", color: "#F5F0E8", opacity: 0.28 }}>
+          DÉVELOPPEUSE FULL STACK
+        </span>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "5px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ width: "12px", height: "1px", background: "#B5673C", flexShrink: 0 }} />
+            <span style={{
+              fontFamily: "var(--font-space-grotesk)", fontSize: "7.5px", letterSpacing: "0.18em",
+              color: "#B5673C",
+              opacity: factVisible ? 1 : 0, transition: "opacity 0.28s ease",
+              whiteSpace: "nowrap",
+            }}>{FACTS[factIdx]}</span>
+            <div style={{ width: "12px", height: "1px", background: "#B5673C", flexShrink: 0 }} />
+          </div>
+          <p style={{
+            fontFamily: "var(--font-cormorant)", fontStyle: "italic",
+            fontSize: "clamp(11px, 1.1vw, 16px)", color: "#F5F0E8", opacity: 0.38,
+            margin: 0, whiteSpace: "nowrap",
+          }}>Je ne code pas. Je compose.</p>
+        </div>
+        <span style={{ fontFamily: "var(--font-space-grotesk)", fontSize: "8px", letterSpacing: "0.3em", color: "#F5F0E8", opacity: 0.28, textAlign: "right" }}>
+          BORDEAUX · MAROC · 2026
+        </span>
       </div>
 
       <style>{`
-        @media (max-width: 600px) { .hero-portrait { display: none !important; } }
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0; }
+        }
       `}</style>
+
+      {/* Filet accent gauche */}
+      <div aria-hidden style={{
+        position: "absolute", left: 0, top: "22%", width: "2px", height: "34%", zIndex: 4,
+        background: "linear-gradient(to bottom, transparent, #B5673C 40%, #B5673C 60%, transparent)",
+        opacity: 0.42,
+      }} />
+
     </section>
   );
 }

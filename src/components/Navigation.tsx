@@ -48,7 +48,7 @@ export default function Navigation() {
 
   return (
     <>
-      {/* Top bar */}
+      {/* Top bar — masqué sur le hero (le hero a sa propre nav intégrée) */}
       <header
         style={{
           position: "fixed",
@@ -56,7 +56,7 @@ export default function Navigation() {
           left: 0,
           right: 0,
           zIndex: 100,
-          display: "flex",
+          display: active === "hero" ? "none" : "flex",
           justifyContent: "space-between",
           alignItems: "center",
           padding: "2.2vh 6vw",
@@ -116,7 +116,7 @@ export default function Navigation() {
         </nav>
       </header>
 
-      {/* Side dot navigation */}
+      {/* Side dot navigation — masqué sur le hero */}
       <nav
         aria-label="Navigation sections"
         style={{
@@ -125,7 +125,7 @@ export default function Navigation() {
           top: "50%",
           transform: "translateY(-50%)",
           zIndex: 100,
-          display: "flex",
+          display: active === "hero" ? "none" : "flex",
           flexDirection: "column",
           gap: "10px",
         }}
