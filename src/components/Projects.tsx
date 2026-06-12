@@ -14,7 +14,7 @@ const PROJECTS = [
     bg: "#1C1917",
     textColor: "#F5F0E8",
     accent: "#C9AA7C",
-    photo: "/binome-alternants-gendarmerie-1.png",
+    photo: "/binome-alternants-gendarmerie-1.webp",
     logo: "/logo_gendarmerie.png",
     confidential: true,
     flip: false,
@@ -34,7 +34,7 @@ const PROJECTS = [
     logo: "/Logo_CITERNEO.png",
     confidential: false,
     flip: true,
-    screenshots: ["/citerneo1.png", "/citerneo2.png", "/citerneo4.png", "/citerneo5.png"],
+    screenshots: ["/citerneo1.png", "/citerneo2.png", "/citerneo4.webp", "/citerneo5.webp"],
   },
   {
     number: "03",

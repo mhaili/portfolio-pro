@@ -322,7 +322,7 @@ export default function MapSection() {
             }}
           >
             <Image
-              src="/photo-portrait.png"
+              src="/photo-portrait.webp"
               alt="Majda"
               fill
               sizes="200px"

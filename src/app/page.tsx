@@ -13,6 +13,7 @@ const HorizontalJourney = dynamic(() => import("@/components/HorizontalJourney")
 const Projects        = dynamic(() => import("@/components/Projects"),          { ssr: false });
 const Skills          = dynamic(() => import("@/components/Skills"),            { ssr: false });
 const Vision          = dynamic(() => import("@/components/Vision"),            { ssr: false });
+const VideoCV         = dynamic(() => import("@/components/VideoCV"),           { ssr: false });
 const PersonalProjects = dynamic(() => import("@/components/PersonalProjects"),  { ssr: false });
 const Contact         = dynamic(() => import("@/components/Contact"),           { ssr: false });
 const Marquee         = dynamic(() => import("@/components/Marquee"),           { ssr: false });
@@ -69,6 +70,9 @@ export default function Home() {
           <div id="perso">
             <PersonalProjects />
           </div>
+
+          {/* Archive — CV vidéo anglais */}
+          <VideoCV />
 
           {/* 07 — Vision */}
           <div id="vision">

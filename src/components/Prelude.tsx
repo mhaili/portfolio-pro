@@ -6,7 +6,7 @@ interface PreludeProps {
   onComplete: () => void;
 }
 
-const letters = ["A", "I", "L", "I", "M", "A"];
+const letters = ["H", "A", "I", "L", "I"];
 
 export default function Prelude({ onComplete }: PreludeProps) {
   const [phase, setPhase] = useState<"h" | "name" | "pulse" | "exit">("h");
@@ -33,25 +33,22 @@ export default function Prelude({ onComplete }: PreludeProps) {
         className="flex items-baseline select-none"
         style={{ fontFamily: "var(--font-cormorant)", fontStyle: "italic" }}
       >
-        {/* H — first letter */}
+        {/* M — first letter */}
         <span
           style={{
             fontSize: "clamp(80px, 16vw, 180px)",
             fontWeight: 300,
             color: "#1C1917",
             opacity: phase === "h" || phase === "name" || phase === "pulse" ? 1 : 0,
-            transform:
-              phase === "pulse"
-                ? "scale(1.03)"
-                : "scale(1)",
+            transform: phase === "pulse" ? "scale(1.03)" : "scale(1)",
             transition: "transform 0.6s ease, opacity 0.4s ease",
             letterSpacing: "-0.02em",
           }}
         >
-          H
+          M
         </span>
 
-        {/* A I L I M A — stagger reveal */}
+        {/* H A I L I — stagger reveal */}
         {letters.map((letter, i) => (
           <span
             key={i}
@@ -60,10 +57,7 @@ export default function Prelude({ onComplete }: PreludeProps) {
               fontWeight: 300,
               color: "#1C1917",
               opacity: phase === "name" || phase === "pulse" ? 1 : 0,
-              transform:
-                phase === "name" || phase === "pulse"
-                  ? "translateY(0)"
-                  : "translateY(20px)",
+              transform: phase === "name" || phase === "pulse" ? "translateY(0)" : "translateY(20px)",
               transition: `opacity 0.4s ease ${i * 0.07}s, transform 0.5s cubic-bezier(0.16,1,0.3,1) ${i * 0.07}s`,
               letterSpacing: "-0.02em",
             }}
@@ -71,6 +65,22 @@ export default function Prelude({ onComplete }: PreludeProps) {
             {letter}
           </span>
         ))}
+
+        {/* .Maj — suffixe doré */}
+        <span
+          style={{
+            fontSize: "clamp(36px, 7vw, 80px)",
+            fontWeight: 300,
+            color: "#C9AA7C",
+            opacity: phase === "name" || phase === "pulse" ? 1 : 0,
+            transform: phase === "name" || phase === "pulse" ? "translateY(0)" : "translateY(20px)",
+            transition: `opacity 0.4s ease ${letters.length * 0.07 + 0.1}s, transform 0.5s cubic-bezier(0.16,1,0.3,1) ${letters.length * 0.07 + 0.1}s`,
+            letterSpacing: "-0.01em",
+            marginLeft: "4px",
+          }}
+        >
+          .Maj
+        </span>
       </div>
 
       {/* Thin gold line underneath */}

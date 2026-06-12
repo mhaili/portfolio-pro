@@ -63,7 +63,7 @@ const CARDS = [
     desc: "Pendant deux ans, l'EFREI a été le terrain où la technique a rencontré la stratégie.\n\nDu développement à l'architecture logicielle, du management de projet au leadership, cette formation a enrichi ma manière de concevoir les systèmes et de collaborer avec les équipes.\n\nUne nouvelle perspective sur la technologie : plus large, plus ambitieuse, plus durable.",
     tech: "Dev Manager · Architecture · Leadership · Bordeaux",
     bg: "#2A3447", accent: "#C9AA7C", textLight: true, num: "06",
-    asset: "bordeaux.jpg", assetType: "photo" as const,
+    asset: "bordeaux.webp", assetType: "photo" as const,
   },
   {
     year: "Sep 2024 → Août 2026",

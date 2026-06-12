@@ -277,7 +277,7 @@ export default function Hero() {
 
         {/* SCÈNE 1 — portrait plein cadre */}
         <div ref={photoRef} style={{ position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none" }}>
-          <Image src="/scene1.png" alt="Majda Mhaili" fill priority sizes="100vw"
+          <Image src="/scene1.webp" alt="Majda Mhaili" fill priority sizes="100vw"
             style={{ objectFit: "cover", objectPosition: "center top" }} />
           <div style={{
             position: "absolute", inset: 0,
@@ -320,7 +320,7 @@ export default function Hero() {
               filter: "url(#waterRipple)",
             }}
           >
-            <Image src="/scene3.png" alt="" fill sizes="100vw"
+            <Image src="/scene3.webp" alt="" fill sizes="100vw"
               style={{ objectFit: "cover", objectPosition: "center top" }} />
           </div>
         </div>
