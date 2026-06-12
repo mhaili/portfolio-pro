@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { bp } from "@/lib/basePath";
 
 const PROJECTS = [
   {
@@ -18,7 +19,7 @@ const PROJECTS = [
     logo: "/logo_gendarmerie.png",
     confidential: true,
     flip: false,
-    screenshots: ["/portail1.png", "/portail2.png", "/portail3.png", "/portail4.png", "/portail5.png"],
+    screenshots: [1,2,3,4,5].map(n => `${bp}/portail${n}.png`),
   },
   {
     number: "02",
@@ -34,7 +35,7 @@ const PROJECTS = [
     logo: "/Logo_CITERNEO.png",
     confidential: false,
     flip: true,
-    screenshots: ["/citerneo1.png", "/citerneo2.png", "/citerneo4.webp", "/citerneo5.webp"],
+    screenshots: [`${bp}/citerneo1.png`, `${bp}/citerneo2.png`, `${bp}/citerneo4.webp`, `${bp}/citerneo5.webp`],
   },
   {
     number: "03",
@@ -50,7 +51,7 @@ const PROJECTS = [
     logo: "/Logo-INRAE_Transparent.svg.png",
     confidential: false,
     flip: false,
-    screenshots: ["/inrae1.png", "/inrae2.jpg", "/inrae3.jpg", "/inrae4.png", "/inrae5.png"],
+    screenshots: [`${bp}/inrae1.png`, `${bp}/inrae2.jpg`, `${bp}/inrae3.jpg`, `${bp}/inrae4.png`, `${bp}/inrae5.png`],
   },
 ];
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { bp } from "@/lib/basePath";
 
 type Category = "Tout" | "Applications Web" | "Expérimentations";
 
@@ -30,7 +31,7 @@ const PROJECTS: {
     category: "Applications Web",
     github: "https://gitlab.com/mhaili/learn-home",
     bg: "#2A3447",
-    screenshots: ["/learnahome1.png", "/learnahome2.png", "/learnahome3.png", "/learnahome4.png", "/learnahome5.png", "/learnahome6.png", "/learnahome7.png", "/learnahome8.png", "/learnahome9.png"],
+    screenshots: [1,2,3,4,5,6,7,8,9].map(n => `${bp}/learnahome${n}.png`),
   },
   {
     title: "Shader Shippou",

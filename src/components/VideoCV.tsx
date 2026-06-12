@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { bp } from "@/lib/basePath";
 
 export default function VideoCV() {
   const ref = useRef<HTMLElement>(null);
@@ -109,7 +110,7 @@ export default function VideoCV() {
               maxHeight: "70vh",
             }}
           >
-            <source src="/English_CV_video.mp4" type="video/mp4" />
+            <source src={`${bp}/English_CV_video.mp4`} type="video/mp4" />
           </video>
         </div>
       </div>
