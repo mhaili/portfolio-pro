@@ -17,7 +17,7 @@ const FACTS = [
 const LS = 260; // taille de la loupe (carré, la forme blob vient du border-radius)
 
 const QUESTION = "Qui serai-je dans cinq ans ?";
-const SUBTITLE  = "Développeuse Full Stack, créatrice et éternelle apprenante.\nChaque projet est une étape vers cette réponse.";
+const SUBTITLE  = "Développeuse Full Stack • Créative • Curieuse\n\nJe transforme des idées en expériences numériques.";
 
 const NAV_LINKS = [
   { href: "#hero",      label: "ACCUEIL"  },
@@ -127,6 +127,13 @@ export default function Hero() {
       tY = e.clientY - r.top;
       tA = 1;
     };
+    const onTouch = (e: TouchEvent) => {
+      const t = e.touches[0];
+      const r = section.getBoundingClientRect();
+      tX = t.clientX - r.left;
+      tY = t.clientY - r.top;
+      tA = 1;
+    };
     const onLeave = () => { tA = 0; };
 
     const tick = () => {
@@ -157,10 +164,14 @@ export default function Hero() {
     raf = requestAnimationFrame(tick);
     section.addEventListener("mousemove",  onMove,  { passive: true });
     section.addEventListener("mouseleave", onLeave);
+    section.addEventListener("touchmove",  onTouch, { passive: true });
+    section.addEventListener("touchend",   onLeave);
     return () => {
       cancelAnimationFrame(raf);
       section.removeEventListener("mousemove",  onMove);
       section.removeEventListener("mouseleave", onLeave);
+      section.removeEventListener("touchmove",  onTouch);
+      section.removeEventListener("touchend",   onLeave);
     };
   }, []);
 
@@ -223,7 +234,7 @@ export default function Hero() {
         }}>
           Majda Mhaili
         </a>
-        <div style={{ display: "flex", gap: "8px", pointerEvents: "auto" }}>
+        <div className="hero-nav-pills" style={{ display: "flex", gap: "8px", pointerEvents: "auto" }}>
           {NAV_LINKS.map(({ href, label }) => (
             <a
               key={href}
@@ -387,7 +398,7 @@ export default function Hero() {
       </div>
 
       {/* ── BARRE BAS 3 colonnes ── */}
-      <div ref={infoRef} style={{
+      <div ref={infoRef} className="hero-bottom-bar" style={{
         position: "absolute", bottom: 0, left: 0, right: 0,
         padding: "1.8vh 7vw 3vh",
         borderTop: "1px solid rgba(245,240,232,0.07)",
@@ -395,7 +406,7 @@ export default function Hero() {
         alignItems: "center", gap: "16px", zIndex: 10,
         background: "linear-gradient(to top, rgba(10,6,2,0.93) 0%, transparent 100%)",
       }}>
-        <span style={{ fontFamily: "var(--font-space-grotesk)", fontSize: "11px", letterSpacing: "0.22em", color: "#F5F0E8", opacity: 0.65 }}>
+        <span className="hero-bottom-side" style={{ fontFamily: "var(--font-space-grotesk)", fontSize: "11px", letterSpacing: "0.22em", color: "#F5F0E8", opacity: 0.65 }}>
           DÉVELOPPEUSE FULL STACK
         </span>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "5px" }}>
@@ -415,7 +426,7 @@ export default function Hero() {
             margin: 0, whiteSpace: "nowrap",
           }}>Je ne code pas. Je compose.</p>
         </div>
-        <span style={{ fontFamily: "var(--font-space-grotesk)", fontSize: "11px", letterSpacing: "0.22em", color: "#F5F0E8", opacity: 0.65, textAlign: "right" }}>
+        <span className="hero-bottom-side" style={{ fontFamily: "var(--font-space-grotesk)", fontSize: "11px", letterSpacing: "0.22em", color: "#F5F0E8", opacity: 0.65, textAlign: "right" }}>
           DISPONIBLE · SEPT. 2026
         </span>
       </div>
@@ -441,6 +452,17 @@ export default function Hero() {
           66%  { border-radius: 52% 48% 62% 38% / 45% 55% 42% 58%; }
           83%  { border-radius: 45% 55% 48% 52% / 38% 62% 48% 52%; }
           100% { border-radius: 58% 42% 52% 48% / 55% 48% 52% 45%; }
+        }
+
+        /* ── RESPONSIVE MOBILE ── */
+        @media (max-width: 768px) {
+          .hero-nav-pills   { display: none !important; }
+          .hero-bottom-side { display: none !important; }
+          .hero-bottom-bar  {
+            grid-template-columns: 1fr !important;
+            justify-items: center;
+            padding: 1.4vh 6vw 2.5vh !important;
+          }
         }
       `}</style>
     </section>
