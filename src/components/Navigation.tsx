@@ -13,7 +13,12 @@ const DOTS = [
   { id: "contact" },
 ];
 
-const DARK_SECTIONS = ["manifeste", "contact"];
+const NAV_LINKS = [
+  { href: "#hero",      label: "ACCUEIL"  },
+  { href: "#formation", label: "PARCOURS" },
+  { href: "#projets",   label: "PROJETS"  },
+  { href: "#contact",   label: "CONTACT"  },
+];
 
 export default function Navigation() {
   const [active, setActive] = useState("hero");
@@ -40,74 +45,76 @@ export default function Navigation() {
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
-  const isDark = DARK_SECTIONS.includes(active);
-  const textColor = isDark ? "#F5F0E8" : "#1C1917";
-  const bgColor = isDark
-    ? scrolled ? "rgba(28,25,23,0.92)" : "rgba(28,25,23,0.6)"
-    : scrolled ? "rgba(245,240,232,0.92)" : "rgba(245,240,232,0.72)";
-
   return (
     <>
-      {/* Top bar — masqué sur le hero (le hero a sa propre nav intégrée) */}
+      {/* Top bar — masqué sur le hero (le hero a sa propre nav) */}
       <header
         style={{
           position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
+          top: 0, left: 0, right: 0,
           zIndex: 100,
           display: active === "hero" ? "none" : "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: "2.2vh 6vw",
-          background: bgColor,
-          backdropFilter: "blur(14px)",
-          transition: "background 0.5s ease, backdrop-filter 0.5s ease",
+          padding: "2.4vh 6vw",
+          background: scrolled
+            ? "rgba(10,6,2,0.88)"
+            : "rgba(10,6,2,0.65)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
           borderBottom: scrolled
-            ? isDark
-              ? "1px solid rgba(201,170,124,0.12)"
-              : "1px solid rgba(28,25,23,0.08)"
+            ? "1px solid rgba(245,240,232,0.07)"
             : "none",
+          transition: "background 0.4s ease, border-bottom 0.4s ease",
         }}
       >
-        <span
+        <a
+          href="#hero"
           style={{
             fontFamily: "var(--font-cormorant)",
             fontStyle: "italic",
-            fontSize: "20px",
-            color: textColor,
+            fontSize: "26px",
+            color: "#F5F0E8",
             fontWeight: 400,
             letterSpacing: "-0.01em",
-            transition: "color 0.4s ease",
+            textDecoration: "none",
           }}
         >
           Majda Mhaili
-        </span>
+        </a>
 
-        <nav style={{ display: "flex", gap: "3vw", alignItems: "center" }}>
-          {[
-            { href: "#formation", label: "Parcours" },
-            { href: "#projets", label: "Projets" },
-            { href: "#contact", label: "Contact" },
-          ].map(({ href, label }) => (
+        <nav style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+          {NAV_LINKS.map(({ href, label }) => (
             <a
               key={href}
               href={href}
-              data-cursor
               style={{
-                fontFamily: "var(--font-dm-sans)",
-                fontSize: "11px",
-                letterSpacing: "0.12em",
-                color: textColor,
+                fontFamily: "var(--font-space-grotesk)",
+                fontSize: "10px",
+                letterSpacing: "0.14em",
+                color: "#F5F0E8",
                 textDecoration: "none",
-                opacity: 0.6,
-                transition: "color 0.4s ease, opacity 0.3s ease",
+                padding: "8px 18px",
+                border: "1px solid rgba(245,240,232,0.15)",
+                borderRadius: "100px",
+                background: "rgba(10,6,2,0.28)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+                opacity: active === href.slice(1) ? 1 : 0.65,
+                transition: "opacity 0.25s, border-color 0.25s, background 0.25s",
+                display: "inline-block",
               }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.opacity = "1";
+              onMouseEnter={e => {
+                const el = e.currentTarget as HTMLAnchorElement;
+                el.style.opacity = "1";
+                el.style.borderColor = "rgba(201,170,124,0.5)";
+                el.style.background  = "rgba(201,170,124,0.1)";
               }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.opacity = "0.6";
+              onMouseLeave={e => {
+                const el = e.currentTarget as HTMLAnchorElement;
+                el.style.opacity = active === href.slice(1) ? "1" : "0.65";
+                el.style.borderColor = "rgba(245,240,232,0.15)";
+                el.style.background  = "rgba(10,6,2,0.28)";
               }}
             >
               {label}
@@ -135,20 +142,14 @@ export default function Navigation() {
             key={id}
             href={`#${id}`}
             aria-label={id}
-            data-cursor
             style={{
               display: "block",
               width: active === id ? "22px" : "4px",
               height: "1px",
-              background: isDark
-                ? active === id
-                  ? "#C9AA7C"
-                  : "rgba(245,240,232,0.25)"
-                : active === id
-                ? "#1C1917"
-                : "rgba(28,25,23,0.2)",
-              transition:
-                "width 0.45s cubic-bezier(0.16,1,0.3,1), background 0.4s ease",
+              background: active === id
+                ? "#C9AA7C"
+                : "rgba(245,240,232,0.25)",
+              transition: "width 0.45s cubic-bezier(0.16,1,0.3,1), background 0.4s ease",
               textDecoration: "none",
             }}
           />

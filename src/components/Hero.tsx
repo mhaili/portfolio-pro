@@ -14,9 +14,9 @@ const FACTS = [
   "CDI · Septembre 2026",
 ];
 
-const LS = 260;
+const LS = 260; // taille de la loupe (carré, la forme blob vient du border-radius)
 
-const QUESTION = "Qui serai-je dans cinq ans ?";
+const QUESTION = "Qui serai-je dans cinq ans ?";
 const SUBTITLE  = "Développeuse Full Stack, créatrice et éternelle apprenante.\nChaque projet est une étape vers cette réponse.";
 
 const NAV_LINKS = [
@@ -26,16 +26,14 @@ const NAV_LINKS = [
   { href: "#contact",   label: "CONTACT"  },
 ];
 
-
 export default function Hero() {
   const sectionRef   = useRef<HTMLElement>(null);
   const wrapRef      = useRef<HTMLDivElement>(null);
   const photoRef     = useRef<HTMLDivElement>(null);
   const lensRef      = useRef<HTMLDivElement>(null);
   const lensInnerRef = useRef<HTMLDivElement>(null);
-  const lensRingRef  = useRef<SVGSVGElement>(null);
   const reticleRef   = useRef<HTMLDivElement>(null);
-  const infoRef = useRef<HTMLDivElement>(null);
+  const infoRef      = useRef<HTMLDivElement>(null);
 
   const [factIdx,     setFactIdx]     = useState(0);
   const [factVisible, setFactVisible] = useState(true);
@@ -44,6 +42,7 @@ export default function Hero() {
   const [cursorOnQ,   setCursorOnQ]   = useState(true);
   const [showCursor,  setShowCursor]  = useState(false);
 
+  // Facts ticker
   useEffect(() => {
     const iv = setInterval(() => {
       setFactVisible(false);
@@ -55,7 +54,7 @@ export default function Hero() {
     return () => clearInterval(iv);
   }, []);
 
-  // Typewriter effect
+  // Typewriter
   useEffect(() => {
     let cancelled = false;
     const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
@@ -89,6 +88,7 @@ export default function Hero() {
     return () => { cancelled = true; };
   }, []);
 
+  // GSAP : entrée photo + scroll fade
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.set(photoRef.current, { scale: 1.07, opacity: 0, filter: "blur(18px)" });
@@ -109,6 +109,7 @@ export default function Hero() {
     return () => ctx.revert();
   }, []);
 
+  // Loupe — lerp fluide (lerp plus doux pour effet liquide)
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -129,9 +130,10 @@ export default function Hero() {
     const onLeave = () => { tA = 0; };
 
     const tick = () => {
-      cX += (tX - cX) * 0.09;
-      cY += (tY - cY) * 0.09;
-      cA += (tA - cA) * 0.065;
+      // Lerp plus doux (0.07) pour un mouvement "eau" inertiel
+      cX += (tX - cX) * 0.07;
+      cY += (tY - cY) * 0.07;
+      cA += (tA - cA) * 0.055;
       const alpha = Math.max(0, Math.min(1, cA));
       const lx = cX - half, ly = cY - half;
 
@@ -144,15 +146,10 @@ export default function Hero() {
         lensInnerRef.current.style.left = `${-lx}px`;
         lensInnerRef.current.style.top  = `${-ly}px`;
       }
-      if (lensRingRef.current) {
-        lensRingRef.current.style.left    = `${lx - 12}px`;
-        lensRingRef.current.style.top     = `${ly - 12}px`;
-        lensRingRef.current.style.opacity = String(alpha * 0.75);
-      }
       if (reticleRef.current) {
         reticleRef.current.style.left    = `${cX}px`;
         reticleRef.current.style.top     = `${cY}px`;
-        reticleRef.current.style.opacity = String(alpha * 0.8);
+        reticleRef.current.style.opacity = String(alpha * 0.85);
       }
 
       raf = requestAnimationFrame(tick);
@@ -167,22 +164,46 @@ export default function Hero() {
     };
   }, []);
 
-  const R = LS / 2 + 12;
-  const hexPoints = Array.from({ length: 6 }, (_, i) => {
-    const a = (Math.PI / 3) * i - Math.PI / 6;
-    return [R + Math.cos(a) * R, R + Math.sin(a) * R];
-  });
-  const hexStr   = hexPoints.map(([x, y]) => `${x},${y}`).join(" ");
-  const hexSmall = hexPoints.map(([x, y]) => {
-    const cx = R, cy = R, f = 0.88;
-    return `${cx + (x - cx) * f},${cy + (y - cy) * f}`;
-  }).join(" ");
-
   return (
     <section
       ref={sectionRef}
       style={{ height: "100vh", background: "#1A0E04", position: "relative", overflow: "hidden" }}
     >
+      {/* Filtre SVG eau — caché, utilisé par la loupe */}
+      <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden>
+        <defs>
+          <filter id="waterRipple" x="-25%" y="-25%" width="150%" height="150%">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.003 0.004"
+              numOctaves="3"
+              seed="5"
+              result="noise"
+            >
+              <animate
+                attributeName="baseFrequency"
+                values="0.003 0.004;0.005 0.003;0.003 0.004"
+                dur="6s"
+                repeatCount="indefinite"
+              />
+              <animate
+                attributeName="seed"
+                values="5;12;5"
+                dur="12s"
+                repeatCount="indefinite"
+              />
+            </feTurbulence>
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="noise"
+              scale="2"
+              xChannelSelector="R"
+              yChannelSelector="G"
+            />
+          </filter>
+        </defs>
+      </svg>
+
       {/* ── NAVIGATION intégrée ── */}
       <nav
         style={{
@@ -194,13 +215,14 @@ export default function Hero() {
           pointerEvents: "none",
         }}
       >
-        <span style={{
+        <a href="#hero" style={{
           fontFamily: "var(--font-cormorant)", fontStyle: "italic",
-          fontSize: "20px", color: "#F5F0E8", fontWeight: 400,
-          letterSpacing: "-0.01em",
+          fontSize: "26px", color: "#F5F0E8", fontWeight: 400,
+          letterSpacing: "-0.01em", textDecoration: "none",
+          pointerEvents: "auto",
         }}>
           Majda Mhaili
-        </span>
+        </a>
         <div style={{ display: "flex", gap: "8px", pointerEvents: "auto" }}>
           {NAV_LINKS.map(({ href, label }) => (
             <a
@@ -208,9 +230,9 @@ export default function Hero() {
               href={href}
               style={{
                 fontFamily: "var(--font-space-grotesk)",
-                fontSize: "9px", letterSpacing: "0.14em",
+                fontSize: "10px", letterSpacing: "0.14em",
                 color: "#F5F0E8", textDecoration: "none",
-                padding: "7px 16px",
+                padding: "8px 18px",
                 border: "1px solid rgba(245,240,232,0.15)",
                 borderRadius: "100px",
                 background: "rgba(10,6,2,0.28)",
@@ -258,43 +280,51 @@ export default function Hero() {
           }} />
         </div>
 
-        {/* LOUPE HEXAGONALE */}
+        {/* LOUPE — forme flaque d'eau (blob morphing) + distorsion eau */}
         <div
           ref={lensRef}
           style={{
             position: "absolute",
-            width: `${LS}px`, height: `${LS}px`,
-            clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
-            overflow: "hidden", zIndex: 4, opacity: 0, pointerEvents: "none",
+            width: `${LS}px`,
+            height: `${LS}px`,
+            overflow: "hidden",
+            zIndex: 4,
+            opacity: 0,
+            pointerEvents: "none",
+            // Forme blob initiale — animée par puddleShape
+            borderRadius: "58% 42% 52% 48% / 55% 48% 52% 45%",
+            animation: "puddleShape 7s ease-in-out infinite",
+            // Bordure lumineuse façon reflet d'eau
+            boxShadow:
+              "0 0 0 1.5px rgba(201,170,124,0.45), 0 0 28px rgba(201,170,124,0.12), inset 0 0 20px rgba(10,6,2,0.15)",
           }}
         >
-          <div ref={lensInnerRef} style={{ position: "absolute", width: "100vw", height: "100vh" }}>
-            <Image src="/scene2.png" alt="" fill sizes="100vw"
+          {/* Contenu avec distorsion eau */}
+          <div
+            ref={lensInnerRef}
+            style={{
+              position: "absolute",
+              width: "100vw",
+              height: "100vh",
+              filter: "url(#waterRipple)",
+            }}
+          >
+            <Image src="/scene3.png" alt="" fill sizes="100vw"
               style={{ objectFit: "cover", objectPosition: "center top" }} />
           </div>
         </div>
 
-        {/* ANNEAU SVG */}
-        <svg ref={lensRingRef} width={R * 2} height={R * 2}
-          style={{ position: "absolute", zIndex: 5, opacity: 0, pointerEvents: "none" }}>
-          <polygon points={hexStr}   fill="none" stroke="rgba(201,170,124,0.65)" strokeWidth="1" />
-          <polygon points={hexSmall} fill="none" stroke="rgba(201,170,124,0.18)" strokeWidth="0.5" />
-          {hexPoints.map(([x, y], i) => (
-            <rect key={i} x={x - 3} y={y - 3} width={6} height={6} fill="rgba(181,103,60,0.8)" />
-          ))}
-        </svg>
-
-        {/* RÉTICULE */}
+        {/* RÉTICULE central — petite croix dorée */}
         <div ref={reticleRef} style={{
           position: "absolute", transform: "translate(-50%, -50%)",
           pointerEvents: "none", zIndex: 6, opacity: 0,
         }}>
-          <svg width="26" height="26">
-            <line x1="13" y1="0"  x2="13" y2="7"  stroke="rgba(201,170,124,0.9)" strokeWidth="0.8" />
-            <line x1="13" y1="19" x2="13" y2="26" stroke="rgba(201,170,124,0.9)" strokeWidth="0.8" />
-            <line x1="0"  y1="13" x2="7"  y2="13" stroke="rgba(201,170,124,0.9)" strokeWidth="0.8" />
-            <line x1="19" y1="13" x2="26" y2="13" stroke="rgba(201,170,124,0.9)" strokeWidth="0.8" />
-            <circle cx="13" cy="13" r="1.8" fill="rgba(201,170,124,1)" />
+          <svg width="22" height="22">
+            <line x1="11" y1="0"  x2="11" y2="6"  stroke="rgba(201,170,124,0.9)" strokeWidth="0.8" />
+            <line x1="11" y1="16" x2="11" y2="22" stroke="rgba(201,170,124,0.9)" strokeWidth="0.8" />
+            <line x1="0"  y1="11" x2="6"  y2="11" stroke="rgba(201,170,124,0.9)" strokeWidth="0.8" />
+            <line x1="16" y1="11" x2="22" y2="11" stroke="rgba(201,170,124,0.9)" strokeWidth="0.8" />
+            <circle cx="11" cy="11" r="1.5" fill="rgba(201,170,124,1)" />
           </svg>
         </div>
 
@@ -306,15 +336,14 @@ export default function Hero() {
           display: "flex", flexDirection: "column",
           alignItems: "center", textAlign: "center",
         }}>
-          {/* Question — Cormorant Display italic */}
           <h1 style={{
-            fontFamily: "var(--font-cormorant)", fontStyle: "italic", fontWeight: 300,
-            fontSize: "clamp(40px, 6.8vw, 108px)", lineHeight: 1.02,
-            letterSpacing: "-0.025em",
+            fontFamily: "var(--font-playfair)", fontStyle: "italic", fontWeight: 700,
+            fontSize: "clamp(26px, 3.8vw, 62px)", lineHeight: 1.08,
+            letterSpacing: "-0.01em",
             color: "#F5F0E8",
             textShadow: "0 2px 60px rgba(181,103,60,0.22), 0 0 2px rgba(245,240,232,0.08)",
             margin: 0,
-            minHeight: "1.02em",
+            minHeight: "1.08em",
           }}>
             {qText}
             {cursorOnQ && showCursor && (
@@ -328,15 +357,14 @@ export default function Hero() {
             )}
           </h1>
 
-          {/* Sous-titre — DM Sans */}
           <p style={{
-            fontFamily: "var(--font-dm-sans)", fontWeight: 300,
-            fontSize: "clamp(15px, 1.55vw, 21px)", lineHeight: 1.7,
-            color: "#E2C9B0", opacity: 0.95,
+            fontFamily: "var(--font-playfair)", fontStyle: "italic", fontWeight: 400,
+            fontSize: "clamp(16px, 1.55vw, 23px)", lineHeight: 1.65,
+            color: "#F5F0E8", opacity: 0.92,
             margin: "3vh 0 0",
-            maxWidth: "46ch",
-            letterSpacing: "0.015em",
-            minHeight: "3.4em",
+            maxWidth: "44ch",
+            letterSpacing: "0.005em",
+            minHeight: "3.3em",
           }}>
             {sText.split("\n").map((line, i, arr) => (
               <span key={i}>
@@ -367,14 +395,14 @@ export default function Hero() {
         alignItems: "center", gap: "16px", zIndex: 10,
         background: "linear-gradient(to top, rgba(10,6,2,0.93) 0%, transparent 100%)",
       }}>
-        <span style={{ fontFamily: "var(--font-space-grotesk)", fontSize: "8px", letterSpacing: "0.3em", color: "#F5F0E8", opacity: 0.28 }}>
+        <span style={{ fontFamily: "var(--font-space-grotesk)", fontSize: "11px", letterSpacing: "0.22em", color: "#F5F0E8", opacity: 0.65 }}>
           DÉVELOPPEUSE FULL STACK
         </span>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "5px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <div style={{ width: "12px", height: "1px", background: "#B5673C", flexShrink: 0 }} />
             <span style={{
-              fontFamily: "var(--font-space-grotesk)", fontSize: "7.5px", letterSpacing: "0.18em",
+              fontFamily: "var(--font-space-grotesk)", fontSize: "11px", letterSpacing: "0.14em",
               color: "#B5673C",
               opacity: factVisible ? 1 : 0, transition: "opacity 0.28s ease",
               whiteSpace: "nowrap",
@@ -383,21 +411,14 @@ export default function Hero() {
           </div>
           <p style={{
             fontFamily: "var(--font-cormorant)", fontStyle: "italic",
-            fontSize: "clamp(11px, 1.1vw, 16px)", color: "#F5F0E8", opacity: 0.38,
+            fontSize: "clamp(14px, 1.3vw, 19px)", color: "#F5F0E8", opacity: 0.6,
             margin: 0, whiteSpace: "nowrap",
           }}>Je ne code pas. Je compose.</p>
         </div>
-        <span style={{ fontFamily: "var(--font-space-grotesk)", fontSize: "8px", letterSpacing: "0.3em", color: "#F5F0E8", opacity: 0.28, textAlign: "right" }}>
-          BORDEAUX · MAROC · 2026
+        <span style={{ fontFamily: "var(--font-space-grotesk)", fontSize: "11px", letterSpacing: "0.22em", color: "#F5F0E8", opacity: 0.65, textAlign: "right" }}>
+          DISPONIBLE · SEPT. 2026
         </span>
       </div>
-
-      <style>{`
-        @keyframes blink {
-          0%, 100% { opacity: 1; }
-          50%       { opacity: 0; }
-        }
-      `}</style>
 
       {/* Filet accent gauche */}
       <div aria-hidden style={{
@@ -406,6 +427,22 @@ export default function Hero() {
         opacity: 0.42,
       }} />
 
+      <style>{`
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0; }
+        }
+
+        @keyframes puddleShape {
+          0%   { border-radius: 58% 42% 52% 48% / 55% 48% 52% 45%; }
+          16%  { border-radius: 42% 58% 38% 62% / 48% 62% 38% 52%; }
+          33%  { border-radius: 62% 38% 58% 42% / 52% 42% 62% 48%; }
+          50%  { border-radius: 38% 62% 45% 55% / 62% 38% 55% 45%; }
+          66%  { border-radius: 52% 48% 62% 38% / 45% 55% 42% 58%; }
+          83%  { border-radius: 45% 55% 48% 52% / 38% 62% 48% 52%; }
+          100% { border-radius: 58% 42% 52% 48% / 55% 48% 52% 45%; }
+        }
+      `}</style>
     </section>
   );
 }

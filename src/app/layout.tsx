@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant, DM_Sans, Space_Grotesk } from "next/font/google";
+import { Cormorant, DM_Sans, Space_Grotesk, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
 const cormorant = Cormorant({
@@ -24,6 +24,14 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Majda Mhaili — Développeuse Full Stack",
   description:
@@ -36,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${cormorant.variable} ${dmSans.variable} ${spaceGrotesk.variable}`}
+      className={`${cormorant.variable} ${dmSans.variable} ${spaceGrotesk.variable} ${playfair.variable}`}
     >
       <body className="bg-chalk text-ink overflow-x-hidden">{children}</body>
     </html>

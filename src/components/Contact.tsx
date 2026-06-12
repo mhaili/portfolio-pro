@@ -128,23 +128,6 @@ export default function Contact() {
         +33 6 62 60 04 73
       </p>
 
-      {/* Footer */}
-      <p
-        style={{
-          position: "absolute",
-          bottom: "4vh",
-          left: "50%",
-          transform: "translateX(-50%)",
-          fontFamily: "var(--font-dm-sans)",
-          fontSize: "10px",
-          color: "#E2C9B0",
-          opacity: 0.3,
-          letterSpacing: "0.12em",
-          whiteSpace: "nowrap",
-        }}
-      >
-        © 2026 MAJDA MHAILI · Conçu & développé avec intention.
-      </p>
 
       <style>{`
         @keyframes pulse-dot {
