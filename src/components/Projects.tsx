@@ -7,24 +7,25 @@ const PROJECTS = [
   {
     number: "01",
     title: "Gendarmerie Nationale",
-    subtitle: "Outils de gestion interne · 2024 — 2026",
-    tags: ["Full Stack", "Sécurisé", "NestJS", "PostgreSQL"],
-    desc: "Développement d'outils internes critiques pour la CPTM (Commandement pour les Territoires et leurs Missions numériques). Projet de prévention et diagnostic d'autoévaluation. Architecture sécurisée, gestion de données sensibles, enjeux institutionnels au plus haut niveau.",
-    note: "Certains projets ne se montrent pas. Ce qui ne se voit pas est souvent le plus important.",
+    subtitle: "Portail de Prévention · 2024 — 2026",
+    tags: ["Vue.js", "Node.js", "PostgreSQL", "FranceConnect", "DSFR"],
+    desc: "Développement d'un portail numérique destiné aux citoyens, collectivités et entreprises pour faciliter l'accès aux actions de prévention de la Gendarmerie Nationale.\n\nConception et développement Full Stack des fonctionnalités de prise de rendez-vous, gestion des offres de prévention, authentification FranceConnect et suivi des demandes.\n\nUn projet où accessibilité, sécurité et service public se rencontrent pour créer des outils utiles au quotidien.",
+    note: "Service public · Full Stack · Accessibilité · Sécurité",
     bg: "#1C1917",
     textColor: "#F5F0E8",
     accent: "#C9AA7C",
-    photo: "/binome-alternants-gendarmerie-1.jpg",
+    photo: "/binome-alternants-gendarmerie-1.png",
     logo: "/logo_gendarmerie.png",
     confidential: true,
     flip: false,
+    screenshots: ["/portail1.png", "/portail2.png", "/portail3.png", "/portail4.png", "/portail5.png"],
   },
   {
     number: "02",
-    title: "Citerneo — Plateformes E-commerce",
-    subtitle: "Amboise · Alternance 2023 → 2024",
-    tags: ["C#", "VueJs", "Orchard CMS", "E-commerce"],
-    desc: "Refonte complète du site corporate de l'entreprise et développement de 6 plateformes e-commerce distinctes. Chaque site, une identité propre. C# côté backend, VueJs côté interface, Orchard CMS comme socle. De la maquette initiale au déploiement final — autonomie totale.",
+    title: "Citerneo — Transformation Digitale",
+    subtitle: "Amboise · Alternance 2023 — 2024",
+    tags: ["Vue.js", "Bootstrap", "Figma", "Photoshop", "Orchard CMS"],
+    desc: "Participation à la refonte complète de l'écosystème web du groupe Citerneo afin de moderniser son image de marque et renforcer sa présence en ligne.\n\nConception de maquettes, développement d'interfaces responsive, amélioration de l'expérience utilisateur et modernisation de plusieurs sites vitrines et e-commerce du groupe.\n\nCollaboration étroite avec les équipes communication, design et informatique autour d'un objectif commun : rendre les produits plus visibles, plus accessibles et plus performants commercialement.",
     note: null,
     bg: "#F5F0E8",
     textColor: "#1C1917",
@@ -33,13 +34,14 @@ const PROJECTS = [
     logo: "/Logo_CITERNEO.png",
     confidential: false,
     flip: true,
+    screenshots: ["/citerneo1.png", "/citerneo2.png", "/citerneo4.png", "/citerneo5.png"],
   },
   {
     number: "03",
-    title: "INRAE — Identité & Refonte Digitale",
-    subtitle: "Nouzilly · Stage Avr → Jul 2023",
-    tags: ["eZplatform", "FR/EN Bilingue", "Identité visuelle", "HTML/CSS"],
-    desc: "Refonte bilingue (FR/EN) des sites de l'UMR infectiologie et santé publique, suite à la migration sous eZplatform. Création du logotype de l'unité de recherche UMR ISP du centre INRAE Val de Loire. Conception du trombinoscope de l'unité. Du web à l'identité graphique institutionnelle.",
+    title: "INRAE — Recherche, Identité & Transmission",
+    subtitle: "Nouzilly · Stage Avril — Juin 2023",
+    tags: ["eZ Platform", "HTML/CSS", "Photoshop", "Illustrator", "Communication"],
+    desc: "Au sein de l'Unité Mixte de Recherche Infectiologie et Santé Publique (UMR ISP), j'ai participé à la modernisation de sa présence numérique à travers plusieurs projets stratégiques.\n\nJ'ai assuré la reprise complète des sites web français et anglais après leur migration vers eZ Platform : audit des contenus, nettoyage du back-office, correction des liens, réorganisation de la médiathèque, adaptation des mises en page et optimisation de l'expérience utilisateur sur desktop et mobile.\n\nEn parallèle, j'ai conçu plusieurs propositions de logo pour renforcer l'identité visuelle de l'unité de recherche, en respectant les contraintes scientifiques et institutionnelles de l'INRAE.\n\nJ'ai également réalisé un nouveau trombinoscope regroupant plus de 170 collaborateurs : prises de vue, retouches, collecte des informations et conception du document final.",
     note: null,
     bg: "#E2C9B0",
     textColor: "#1C1917",
@@ -48,6 +50,7 @@ const PROJECTS = [
     logo: "/Logo-INRAE_Transparent.svg.png",
     confidential: false,
     flip: false,
+    screenshots: ["/inrae1.png", "/inrae2.jpg", "/inrae3.jpg", "/inrae4.png", "/inrae5.png"],
   },
 ];
 
@@ -123,7 +126,7 @@ function ProjectRow({
       ref={ref}
       style={{
         display: "grid",
-        gridTemplateColumns: p.flip ? "1fr 1fr" : "1fr 1fr",
+        gridTemplateColumns: "1fr 1fr",
         minHeight: "85vh",
         background: p.bg,
         borderBottom: "1px solid rgba(28,25,23,0.06)",
@@ -140,6 +143,7 @@ function ProjectRow({
           confidential={p.confidential}
           accent={p.accent}
           index={index}
+          screenshots={p.screenshots}
         />
       )}
 
@@ -233,6 +237,7 @@ function ProjectRow({
             opacity: 0.85,
             maxWidth: "520px",
             marginBottom: p.note ? "24px" : "0",
+            whiteSpace: "pre-line",
           }}
         >
           {p.desc}
@@ -266,6 +271,7 @@ function ProjectRow({
           confidential={p.confidential}
           accent={p.accent}
           index={index}
+          screenshots={p.screenshots}
         />
       )}
     </div>
@@ -278,13 +284,21 @@ function ImagePanel({
   confidential,
   accent,
   index,
+  screenshots,
 }: {
   photo: string;
   logo: string;
   confidential: boolean;
   accent: string;
   index: number;
+  screenshots?: string[];
 }) {
+  const [slideOpen, setSlideOpen] = useState(false);
+  const [current,   setCurrent]   = useState(0);
+
+  const prev = (e: React.MouseEvent) => { e.stopPropagation(); setCurrent(i => (i - 1 + (screenshots?.length ?? 1)) % (screenshots?.length ?? 1)); };
+  const next = (e: React.MouseEvent) => { e.stopPropagation(); setCurrent(i => (i + 1) % (screenshots?.length ?? 1)); };
+
   return (
     <div
       style={{
@@ -370,6 +384,164 @@ function ImagePanel({
           >
             CONFIDENTIEL
           </p>
+        </div>
+      )}
+
+      {/* Eye button — visible only if screenshots exist */}
+      {screenshots && screenshots.length > 0 && (
+        <button
+          onClick={() => { setSlideOpen(true); setCurrent(0); }}
+          style={{
+            position: "absolute",
+            top: "5vh",
+            right: "5vw",
+            width: "52px",
+            height: "52px",
+            borderRadius: "50%",
+            background: `rgba(10,6,2,0.85)`,
+            backdropFilter: "blur(10px)",
+            border: "1.5px solid #B5673C",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "box-shadow 0.3s",
+            zIndex: 5,
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 20px rgba(181,103,60,0.7)";
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = "none";
+          }}
+          aria-label="Voir les captures"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B5673C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      )}
+
+      {/* Slideshow modal */}
+      {slideOpen && screenshots && (
+        <div
+          onClick={() => setSlideOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 999,
+            background: "rgba(10,6,2,0.94)",
+            backdropFilter: "blur(16px)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "24px",
+          }}
+        >
+          {/* Close */}
+          <button
+            onClick={() => setSlideOpen(false)}
+            style={{
+              position: "absolute",
+              top: "4vh",
+              right: "4vw",
+              background: "none",
+              border: `1px solid ${accent}40`,
+              borderRadius: "50%",
+              width: "38px",
+              height: "38px",
+              cursor: "pointer",
+              color: accent,
+              fontSize: "16px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >✕</button>
+
+          {/* Counter */}
+          <p style={{
+            position: "absolute",
+            top: "5vh",
+            left: "50%",
+            transform: "translateX(-50%)",
+            fontFamily: "var(--font-dm-sans)",
+            fontSize: "9px",
+            letterSpacing: "0.24em",
+            color: accent,
+            opacity: 0.5,
+          }}>
+            {current + 1} / {screenshots.length}
+          </p>
+
+          {/* Image */}
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{ position: "relative", maxWidth: "88vw", maxHeight: "76vh" }}
+          >
+            <img
+              src={screenshots[current]}
+              alt=""
+              style={{
+                maxWidth: "88vw",
+                maxHeight: "76vh",
+                objectFit: "contain",
+                borderRadius: "8px",
+                boxShadow: "0 20px 80px rgba(0,0,0,0.6)",
+                display: "block",
+              }}
+            />
+          </div>
+
+          {/* Prev / Next */}
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{ display: "flex", gap: "16px", alignItems: "center" }}
+          >
+            <button onClick={prev} style={{
+              background: "none",
+              border: `1px solid ${accent}40`,
+              borderRadius: "50%",
+              width: "44px", height: "44px",
+              cursor: "pointer",
+              color: accent,
+              fontSize: "18px",
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>←</button>
+
+            {/* Dots */}
+            <div style={{ display: "flex", gap: "8px" }}>
+              {screenshots.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={e => { e.stopPropagation(); setCurrent(i); }}
+                  style={{
+                    width: i === current ? "20px" : "6px",
+                    height: "6px",
+                    borderRadius: "3px",
+                    background: i === current ? accent : `${accent}40`,
+                    border: "none",
+                    cursor: "pointer",
+                    transition: "width 0.3s ease, background 0.3s ease",
+                    padding: 0,
+                  }}
+                />
+              ))}
+            </div>
+
+            <button onClick={next} style={{
+              background: "none",
+              border: `1px solid ${accent}40`,
+              borderRadius: "50%",
+              width: "44px", height: "44px",
+              cursor: "pointer",
+              color: accent,
+              fontSize: "18px",
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>→</button>
+          </div>
         </div>
       )}
     </div>

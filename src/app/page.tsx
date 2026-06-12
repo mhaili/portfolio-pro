@@ -7,12 +7,13 @@ import Prelude from "@/components/Prelude";
 import FilmGrain from "@/components/FilmGrain";
 
 const Hero            = dynamic(() => import("@/components/Hero"),              { ssr: false });
-const PinnedStatement = dynamic(() => import("@/components/PinnedStatement"),   { ssr: false });
+// const PinnedStatement = dynamic(() => import("@/components/PinnedStatement"),   { ssr: false });
 const MapSection      = dynamic(() => import("@/components/MapSection"),        { ssr: false });
 const HorizontalJourney = dynamic(() => import("@/components/HorizontalJourney"), { ssr: false });
 const Projects        = dynamic(() => import("@/components/Projects"),          { ssr: false });
 const Skills          = dynamic(() => import("@/components/Skills"),            { ssr: false });
 const Vision          = dynamic(() => import("@/components/Vision"),            { ssr: false });
+const PersonalProjects = dynamic(() => import("@/components/PersonalProjects"),  { ssr: false });
 const Contact         = dynamic(() => import("@/components/Contact"),           { ssr: false });
 const Marquee         = dynamic(() => import("@/components/Marquee"),           { ssr: false });
 const CustomCursor    = dynamic(() => import("@/components/CustomCursor"),      { ssr: false });
@@ -44,7 +45,7 @@ export default function Home() {
           <Marquee />
 
           {/* 02 — La citation qui s'allume mot par mot */}
-          <PinnedStatement />
+          {/* <PinnedStatement /> */}
 
           {/* 03 — Carte Méditerranée */}
           <div id="carte">
@@ -62,6 +63,11 @@ export default function Home() {
           {/* 06 — Compétences */}
           <div id="competences">
             <Skills />
+          </div>
+
+          {/* Projets perso & scolaires */}
+          <div id="perso">
+            <PersonalProjects />
           </div>
 
           {/* 07 — Vision */}

@@ -60,9 +60,9 @@ export default function MapSection() {
       // Avatar travels from left panel to right panel
       gsap.fromTo(
         avatarRef.current,
-        { left: "calc(25% - 30px)", top: "50%", scale: 0.7, opacity: 0 },
+        { left: "calc(25% - 40px)", top: "50%", scale: 0.7, opacity: 0 },
         {
-          left: "calc(75% - 30px)",
+          left: "calc(75% - 40px)",
           top: "40%",
           scale: 1,
           opacity: 1,
@@ -291,10 +291,10 @@ export default function MapSection() {
           style={{
             position: "absolute",
             top: "50%",
-            left: "calc(25% - 30px)",
+            left: "calc(25% - 40px)",
             transform: "translateY(-50%)",
-            width: "60px",
-            height: "60px",
+            width: "80px",
+            height: "80px",
             zIndex: 10,
             pointerEvents: "none",
           }}
@@ -303,7 +303,7 @@ export default function MapSection() {
           <div
             style={{
               position: "absolute",
-              inset: "-6px",
+              inset: "-7px",
               borderRadius: "50%",
               border: "1.5px solid rgba(201,170,124,0.6)",
               animation: "avatar-ring 2s ease-in-out infinite",
@@ -312,8 +312,8 @@ export default function MapSection() {
           {/* Photo circle */}
           <div
             style={{
-              width: "60px",
-              height: "60px",
+              width: "80px",
+              height: "80px",
               borderRadius: "50%",
               overflow: "hidden",
               border: "2px solid #C9AA7C",
@@ -325,8 +325,9 @@ export default function MapSection() {
               src="/photo-portrait.png"
               alt="Majda"
               fill
-              sizes="60px"
-              style={{ objectFit: "cover", objectPosition: "center top" }}
+              sizes="200px"
+              quality={100}
+              style={{ objectFit: "cover", objectPosition: "center 15%" }}
             />
           </div>
           {/* Distance label below */}
@@ -350,20 +351,28 @@ export default function MapSection() {
       </div>
 
       {/* Caption */}
-      <div style={{ padding: "4vh 8vw 8vh", position: "relative", zIndex: 2 }}>
-        <p
-          style={{
-            fontFamily: "var(--font-dm-sans)",
-            fontSize: "12px",
-            color: "#E2C9B0",
-            opacity: 0.55,
-            maxWidth: "420px",
-            lineHeight: 1.8,
-            letterSpacing: "0.04em",
-          }}
-        >
-          Une trajectoire qui a façonné ma façon<br />
-          de construire des expériences digitales.
+      <div style={{ padding: "3vh 8vw 6vh", position: "relative", zIndex: 2 }}>
+        <p style={{
+          fontFamily: "var(--font-cormorant)",
+          fontStyle: "italic",
+          fontWeight: 300,
+          fontSize: "clamp(16px, 1.8vw, 26px)",
+          color: "#F5F0E8",
+          letterSpacing: "-0.01em",
+          marginBottom: "1vh",
+        }}>
+          J'ai appris à m'adapter · À recommencer · À construire.
+        </p>
+        <p style={{
+          fontFamily: "var(--font-dm-sans)",
+          fontSize: "clamp(13px, 1.3vw, 18px)",
+          color: "#E2C9B0",
+          opacity: 0.6,
+          lineHeight: 1.7,
+          letterSpacing: "0.03em",
+          maxWidth: "520px",
+        }}>
+          Aujourd'hui, je mets cette même énergie au service des expériences numériques que je crée.
         </p>
       </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -15,7 +15,7 @@ const CARDS = [
     year: "2018 — 2019",
     title: "Le Bac.",
     sub: "Sciences Physiques · Mention Bien · Marrakech",
-    desc: "Les équations avant le code. Mention Bien en Sciences Physiques au Maroc. La rigueur scientifique comme premier langage — avant le HTML, il y avait les formules.",
+    desc: "Les équations avant le code.\n\nMention Bien en Sciences Physiques.\n\nMon premier langage fut celui de la logique.",
     tech: "Marrakech · Lycée · Sciences Physiques",
     bg: "#B5673C", accent: "#F5F0E8", textLight: true, num: "01",
     asset: "photo-morocco.jpg", assetType: "photo" as const,
@@ -23,36 +23,36 @@ const CARDS = [
   {
     year: "2019 — 2022",
     title: "La Traversée.",
-    sub: "Marrakech → Blois · 3 000 km",
-    desc: "Une mer, une nouvelle culture, une nouvelle langue. Décision : quitter Marrakech pour l'Université de Tours — site de Blois. L1/L2 Licence Informatique-Mathématiques. L'aventure commence.",
+    sub: "Marrakech → Blois • 3 000 km",
+    desc: "Avant les frameworks, il y avait les fondations.\n\nLicence Informatique-Mathématiques (L1 & L2), Université de Tours — site de Blois.\n\nEntre logique, algorithmes et découverte d'un nouveau pays, je construis les bases sur lesquelles tout le reste viendra s'appuyer.",
     tech: "Université de Tours · Blois",
     bg: "#2A3447", accent: "#C9AA7C", textLight: true, num: "02",
-    asset: "Universite_de_Tours_logo.png", assetType: "logo" as const,
+    asset: "blois.jpg", assetType: "photo" as const,
   },
   {
     year: "2022 — 2024",
     title: "L'Exploration.",
     sub: "BUT MMI · Parcours Dev Web · IUT Blois",
-    desc: "2ème année BUT Métiers du Multimédia et de l'Internet, spécialisation développement web, à l'IUT de Blois. Là où le code a vraiment rencontré le design. React, JavaScript, PHP, UX — la technique devient un art de composer.",
-    tech: "React · JavaScript · PHP · UX · HTML/CSS",
+    desc: "Les algorithmes m'ont appris à réfléchir.\n\nLe web m'a appris à créer.\n\nAu sein du BUT MMI de l'IUT de Blois, je découvre un nouvel équilibre entre technique et créativité. Celui qui façonnera la suite de mon parcours.",
+    tech: "Créativité · Interfaces · Multimédia · Logique",
     bg: "#1C1917", accent: "#C9AA7C", textLight: true, num: "03",
-    asset: "logo_iut.png", assetType: "logo" as const,
+    asset: "blois.jpg", assetType: "photo" as const,
   },
   {
     year: "Avr → Jul 2023",
     title: "INRAE.",
-    sub: "Stage · Nouzilly",
-    desc: "Refonte bilingue FR/EN des sites de l'UMR infectiologie et santé publique sur eZplatform. Création du logotype de l'unité UMR ISP du centre INRAE Val de Loire. Conception du trombinoscope de l'équipe. Premier projet d'identité visuelle institutionnelle.",
-    tech: "eZplatform · HTML/CSS · Identité visuelle · Bilingue",
+    sub: "Stage • Nouzilly • Avril → Juillet 2023",
+    desc: "Le premier projet réel.\n\nAu sein de l'INRAE Val de Loire, je participe à la refonte bilingue de sites scientifiques sous eZPlatform.\n\nEntre développement web, identité visuelle et expérience utilisateur, je découvre les exigences d'un projet utilisé par de vrais utilisateurs.\n\nPour la première fois, le code dépasse le cadre de l'école.",
+    tech: "eZPlatform • HTML/CSS • UX • Bilingue • Identité visuelle",
     bg: "#2A3447", accent: "#B5673C", textLight: true, num: "04",
     asset: "Logo-INRAE_Transparent.svg.png", assetType: "logo" as const,
   },
   {
     year: "Sep 2023 → Août 2024",
     title: "Citerneo.",
-    sub: "Alternance · Amboise",
-    desc: "Refonte complète du site de l'entreprise. Développement de 6 sites e-commerce distincts via Orchard CMS. C# côté backend, VueJs côté interface. Chaque site, une identité propre — autonomie totale, de la maquette au déploiement.",
-    tech: "C# · VueJs · Orchard CMS · E-commerce",
+    sub: "Alternance • Amboise • Septembre 2023 → Août 2024",
+    desc: "L'autonomie prend une autre dimension.\n\nPendant un an, je participe à la refonte du site vitrine de l'entreprise et au développement de plusieurs sites e-commerce.\n\nDu design à l'intégration, du frontend au backend, je découvre le rythme, les responsabilités et les exigences du monde professionnel.\n\nUne année où la théorie devient pratique.",
+    tech: "C# • Vue.js • Orchard CMS • E-commerce",
     bg: "#B5673C", accent: "#F5F0E8", textLight: true, num: "05",
     asset: "Logo_CITERNEO.png", assetType: "logo" as const,
   },
@@ -60,39 +60,113 @@ const CARDS = [
     year: "2024 — 2026",
     title: "EFREI.",
     sub: "Mastère Expert Dev Manager Full Stack · Campus Bordeaux",
-    desc: "M1 et M2 — Expert Dev Manager Full Stack, campus de Bordeaux. La maîtrise technique rencontre la vision stratégique. Architecture logicielle, management de projet, leadership. En cours — et ce n'est que le début.",
+    desc: "Pendant deux ans, l'EFREI a été le terrain où la technique a rencontré la stratégie.\n\nDu développement à l'architecture logicielle, du management de projet au leadership, cette formation a enrichi ma manière de concevoir les systèmes et de collaborer avec les équipes.\n\nUne nouvelle perspective sur la technologie : plus large, plus ambitieuse, plus durable.",
     tech: "Dev Manager · Architecture · Leadership · Bordeaux",
     bg: "#2A3447", accent: "#C9AA7C", textLight: true, num: "06",
-    asset: "Logo_Efrei_2022.svg.png", assetType: "logo" as const,
+    asset: "bordeaux.jpg", assetType: "photo" as const,
   },
   {
     year: "Sep 2024 → Août 2026",
     title: "Gendarmerie.",
-    sub: "Alternance · Nationale · France",
-    desc: "Développeuse Full Stack au sein des services numériques. Projet de prévention et diagnostic d'autoévaluation pour la CPTM. Outils internes sécurisés, architecture robuste, données sensibles. Rigueur, engagement, service — les valeurs d'une institution au cœur du travail.",
-    tech: "Full Stack · Sécurité · Outils internes · Confidentiel",
+    sub: "Alternance · Groupement de Gendarmerie de la Gironde",
+    desc: "Construire pour ceux qui protègent.\n\nAu sein des services numériques de la Gendarmerie Nationale, je contribue au développement d'applications et de plateformes destinées à accompagner des missions de prévention et de service public.\n\nUne expérience où rigueur, responsabilité et impact prennent tout leur sens.",
+    tech: "Développement · Prévention · Sécurité · Service public",
     bg: "#1C1917", accent: "#C9AA7C", textLight: true, num: "07",
     asset: "logo_gendarmerie.png", assetType: "logo" as const,
   },
   {
-    year: "Jun 2022 → Jul 2023",
-    title: "Mamie Bigoude.",
-    sub: "Job Étudiant · Restauration · Blois",
-    desc: "En parallèle des études : 1 an en restauration à Blois. Prise de commande, service en salle, encaissement. Une autre forme de rigueur — celle du contact humain, de la gestion du stress, de la polyvalence dans l'urgence.",
-    tech: "Service · Relation client · Gestion du stress · Polyvalence",
+    year: "En parallèle",
+    title: "Les coulisses.",
+    sub: "Restauration · Freelance · Artisanat",
+    desc: "Derrière la développeuse, il y a aussi l'étudiante, la salariée et l'entrepreneuse.\n\nEntre mes études, mon alternance à la Gendarmerie et mes activités le week-end, j'ai appris à gérer plusieurs responsabilités en parallèle.\n\nCette organisation m'a appris la discipline, l'autonomie et l'adaptation.\n\nDes qualités qui me suivent autant dans mes projets que dans ma vie quotidienne.",
+    tech: "Organisation · Autonomie · Discipline · Adaptabilité",
     bg: "#E2C9B0", accent: "#1C1917", textLight: false, num: "↕",
-    asset: "mamie_bigoude.jpg", assetType: "logo" as const,
+    asset: null, assetType: "logos" as const,
+    assets: [
+      { src: "mamie_bigoude.jpg",  label: "Serveuse",      sub: "Mamie Bigoude · Blois",   keepColor: true },
+      { src: "tim_laure.png",      label: "Vendeuse",      sub: "Tim & Laure · Week-end",  keepColor: false },
+      { src: "tafukt_rugs.png",    label: "Entrepreneuse", sub: "Tafukt Rugs · Bientôt",   keepColor: false, large: true },
+    ],
   },
   {
     year: "Toujours",
     title: "Ce qui me construit.",
     sub: "Musculation · Photographie · Voyages",
-    desc: "La musculation comme discipline du quotidien — la régularité, l'effort, le dépassement de soi. La photographie comme autre regard sur le monde. Les voyages comme école permanente, entre Maroc et France, entre cultures et horizons. Ce qu'on fait en dehors du code dit autant que ce qu'on fait dedans.",
-    tech: "Musculation · Photographie · Voyages · Équilibre",
+    desc: "La musculation m'a appris que les résultats se construisent dans la durée.\n\nLe travail de terrain m'a appris le contact humain et le sens du service.\n\nLa photographie et la création de contenu m'ont appris à raconter une histoire en une image.\n\nFinalement, chacune de ces expériences nourrit la même chose : ma manière de concevoir le monde et les projets que je développe.",
+    tech: "Musculation · Photographie · Création de contenu · Équilibre",
     bg: "#F5F0E8", accent: "#B5673C", textLight: false, num: "♡",
     asset: null, assetType: null,
   },
 ];
+
+function LogoBadge({ src, label, sub, keepColor, large }: { src: string; label: string; sub: string; keepColor?: boolean; large?: boolean }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+        cursor: "default",
+      }}
+    >
+      <div style={{
+        width: "clamp(56px,6.5vw,82px)",
+        height: "clamp(40px,4.8vw,60px)",
+        background: hovered ? "#1C1917" : "rgba(245,240,232,0.96)",
+        borderRadius: "6px",
+        border: hovered ? "1px solid rgba(201,170,124,0.3)" : "1px solid rgba(28,25,23,0.1)",
+        overflow: "hidden",
+        position: "relative",
+        boxShadow: hovered ? "0 4px 18px rgba(0,0,0,0.22)" : "0 2px 10px rgba(0,0,0,0.1)",
+        transition: "background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
+        flexShrink: 0,
+      }}>
+        <Image
+          src={`/${src}`}
+          alt={label}
+          fill
+          sizes="96px"
+          style={{
+            objectFit: "contain",
+            padding: "6px",
+            filter: hovered && !keepColor ? "brightness(0) invert(1)" : "none",
+            transition: "filter 0.3s ease",
+          }}
+        />
+      </div>
+      <div style={{
+        opacity: hovered ? 1 : 0,
+        transform: hovered ? "translateX(0)" : "translateX(-6px)",
+        transition: "opacity 0.3s ease, transform 0.3s ease",
+        pointerEvents: "none",
+      }}>
+        <p style={{
+          fontFamily: "var(--font-dm-sans)",
+          fontSize: "10px",
+          letterSpacing: "0.14em",
+          color: "#1C1917",
+          fontWeight: 500,
+          marginBottom: "2px",
+        }}>
+          {label}
+        </p>
+        <p style={{
+          fontFamily: "var(--font-dm-sans)",
+          fontSize: "9px",
+          letterSpacing: "0.1em",
+          color: "#1C1917",
+          opacity: 0.55,
+        }}>
+          {sub}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export default function HorizontalJourney() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -266,6 +340,21 @@ export default function HorizontalJourney() {
               </div>
             )}
 
+            {/* Badges multiples avec survol */}
+            {card.assetType === "logos" && "assets" in card && (
+              <div style={{
+                position: "absolute",
+                top: "7vh", right: "5vw",
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+              }}>
+                {(card as typeof card & { assets: { src: string; label: string; sub: string; keepColor?: boolean; large?: boolean }[] }).assets.map((item) => (
+                  <LogoBadge key={item.src} {...item} />
+                ))}
+              </div>
+            )}
+
             {/* Badge logo (entreprises + écoles) */}
             {card.assetType === "logo" && card.asset && (
               <div style={{
@@ -366,6 +455,7 @@ export default function HorizontalJourney() {
                   opacity: 0.8,
                   lineHeight: 1.7,
                   marginBottom: "22px",
+                  whiteSpace: "pre-line",
                 }}
               >
                 {card.desc}
@@ -374,10 +464,10 @@ export default function HorizontalJourney() {
               <p
                 style={{
                   fontFamily: "var(--font-dm-sans)",
-                  fontSize: "8px",
-                  letterSpacing: "0.18em",
+                  fontSize: "11px",
+                  letterSpacing: "0.14em",
                   color: card.accent,
-                  opacity: 0.55,
+                  opacity: 0.6,
                 }}
               >
                 {card.tech}

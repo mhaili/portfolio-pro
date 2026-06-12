@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 
 const STACK = {
-  "Front-end": ["React", "TypeScript", "Angular", "VueJs", "HTML/CSS", "JavaScript"],
-  "Back-end": ["Node.js", "NestJS", "Express.js", "PHP", "Laravel", "Symfony"],
-  "Base de données": ["PostgreSQL", "Sequelize ORM"],
-  "CMS & autres": ["Orchard CMS", "eZplatform", "C#"],
+  "Front-end": ["React", "TypeScript", "Angular", "VueJs", "HTML/CSS", "JavaScript", "Bootstrap", "Tailwind CSS", "DSFR"],
+  "Back-end": ["Node.js", "NestJS", "Express.js", "PHP", "Laravel", "Symfony", "API REST", "JWT Auth"],
+  "Base de données": ["PostgreSQL", "MySQL", "Sequelize ORM", "TypeORM"],
+  "CMS & autres": ["Orchard CMS", "eZplatform", "WordPress"],
+  "DevOps & outils": ["Docker", "Git", "GitLab", "Postman", "Swagger", "Linux"],
 };
 
 export default function Skills() {
@@ -150,10 +151,11 @@ export default function Skills() {
           </p>
           <div style={{ display: "flex", gap: "3vw", flexWrap: "wrap" }}>
             {[
-              "Curieuse & apprenante",
+              "Curiosité technique",
+              "Adaptabilité",
+              "Autonomie",
               "Esprit d'équipe",
-              "Rigoureuse & précise",
-              "Autonome",
+              "Rigueur & précision",
             ].map((trait) => (
               <span
                 key={trait}
@@ -196,9 +198,9 @@ export default function Skills() {
             LANGUES
           </span>
           {[
-            { lang: "Français", level: "Natif" },
-            { lang: "Anglais", level: "B2" },
-            { lang: "Arabe", level: "Langue d'origine" },
+            { lang: "Français", level: "Courant" },
+            { lang: "Anglais", level: "B2 · TOEIC" },
+            { lang: "Arabe", level: "Natif" },
           ].map(({ lang, level }, i) => (
             <span key={lang}>
               <span

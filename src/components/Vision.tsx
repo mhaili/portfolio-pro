@@ -4,16 +4,16 @@ import { useEffect, useRef, useState } from "react";
 
 const columns = [
   {
-    title: "POUR LES ENTREPRISES",
-    text: "Des interfaces qui n'ont pas peur d'être belles ET fonctionnelles. Du code qui tient la nuit comme en prod.",
+    title: "POUR LES ORGANISATIONS",
+    text: "Transformer des idées complexes en outils concrets.\n\nConcevoir des solutions fiables, utiles et durables.",
   },
   {
     title: "POUR LES UTILISATEURS",
-    text: "Des expériences qui respectent l'attention et l'intelligence. Chaque clic doit avoir du sens.",
+    text: "Créer des expériences simples dans un monde devenu complexe.\n\nChaque écran doit avoir un sens.",
   },
   {
-    title: "POUR MOI-MÊME",
-    text: "Un travail qui mêle l'exigence technique à la vision artistique. Je ne sépare pas les deux.",
+    title: "POUR MOI",
+    text: "Construire une carrière où la technique rencontre la créativité.\n\nNe jamais choisir entre l'ingénierie et l'esthétique.",
   },
 ];
 
@@ -52,7 +52,7 @@ export default function Vision() {
             marginBottom: "8vh",
           }}
         >
-          Ce que<br />je veux<br />construire.
+          Ce vers<br />quoi je<br />tends.
         </h2>
 
         <div
@@ -106,6 +106,7 @@ function VisionColumn({
         fontSize: hovered ? "clamp(16px, 1.8vw, 22px)" : "14px",
         color: "#1C1917",
         lineHeight: 1.75,
+        whiteSpace: "pre-line",
         transition: "font-size 0.4s ease, font-family 0.1s, font-style 0.3s",
       }}>
         {text}
