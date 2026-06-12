@@ -36,6 +36,13 @@ export const metadata: Metadata = {
   title: "Majda Mhaili — Développeuse Full Stack",
   description:
     "Portfolio de Majda Mhaili, développeuse full-stack passionnée par l'expérience utilisateur et le design premium.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32", type: "image/png" },
+      { url: "/icon.png",    sizes: "512x512", type: "image/png" },
+    ],
+    apple: { url: "/icon.png", sizes: "512x512", type: "image/png" },
+  },
 };
 
 export default function RootLayout({
