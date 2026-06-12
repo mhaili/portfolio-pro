@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { bp } from "@/lib/basePath";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -277,7 +278,7 @@ export default function Hero() {
 
         {/* SCÈNE 1 — portrait plein cadre */}
         <div ref={photoRef} style={{ position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none" }}>
-          <Image src="/scene1.webp" alt="Majda Mhaili" fill priority sizes="100vw"
+          <Image src={`${bp}/scene1.webp`} alt="Majda Mhaili" fill priority sizes="100vw"
             style={{ objectFit: "cover", objectPosition: "center top" }} />
           <div style={{
             position: "absolute", inset: 0,
@@ -320,7 +321,7 @@ export default function Hero() {
               filter: "url(#waterRipple)",
             }}
           >
-            <Image src="/scene3.webp" alt="" fill sizes="100vw"
+            <Image src={`${bp}/scene3.webp`} alt="" fill sizes="100vw"
               style={{ objectFit: "cover", objectPosition: "center top" }} />
           </div>
         </div>

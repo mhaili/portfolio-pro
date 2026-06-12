@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { bp } from "@/lib/basePath";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -126,7 +127,7 @@ function LogoBadge({ src, label, sub, keepColor, large }: { src: string; label: 
         flexShrink: 0,
       }}>
         <Image
-          src={`/${src}`}
+          src={`${bp}/${src}`}
           alt={label}
           fill
           sizes="96px"
@@ -326,7 +327,7 @@ export default function HorizontalJourney() {
                 border: `1px solid ${card.accent}30`,
               }}>
                 <Image
-                  src={`/${card.asset}`}
+                  src={`${bp}/${card.asset}`}
                   alt=""
                   fill
                   sizes="155px"
@@ -373,7 +374,7 @@ export default function HorizontalJourney() {
                 boxShadow: "0 2px 16px rgba(0,0,0,0.18)",
               }}>
                 <Image
-                  src={`/${card.asset}`}
+                  src={`${bp}/${card.asset}`}
                   alt={card.title}
                   fill
                   sizes="120px"

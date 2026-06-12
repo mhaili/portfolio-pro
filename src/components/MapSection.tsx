@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
+import { bp } from "@/lib/basePath";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -128,7 +129,7 @@ export default function MapSection() {
         {/* LEFT — Marrakech */}
         <div style={{ position: "relative", overflow: "hidden" }}>
           <Image
-            src="/photo-morocco.jpg"
+            src={`${bp}/photo-morocco.jpg`}
             alt="Marrakech"
             fill
             sizes="50vw"
@@ -195,7 +196,7 @@ export default function MapSection() {
         {/* RIGHT — Blois */}
         <div style={{ position: "relative", overflow: "hidden" }}>
           <Image
-            src="/blois.jpg"
+            src={`${bp}/blois.jpg`}
             alt="Blois"
             fill
             sizes="50vw"
@@ -322,7 +323,7 @@ export default function MapSection() {
             }}
           >
             <Image
-              src="/photo-portrait.webp"
+              src={`${bp}/photo-portrait.webp`}
               alt="Majda"
               fill
               sizes="200px"
